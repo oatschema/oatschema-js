@@ -2,15 +2,15 @@
 
 [![npm](https://img.shields.io/npm/v/oatschema.svg)](https://www.npmjs.com/package/oatschema)
 [![CI](https://github.com/oatschema/oatschema-js/actions/workflows/ci.yml/badge.svg)](https://github.com/oatschema/oatschema-js/actions/workflows/ci.yml)
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://github.com/oatschema/oatschema-js/blob/main/LICENSE)
 
 The [OATS](https://oatschema.org) (Open Annotation Task Schemas) JSON schemas for JavaScript and TypeScript.
 
-OATS is a set of strict, versioned JSON Schema 2020-12 schemas for the outputs of machine learning models, workflow steps and human annotation: one shape for a classification, a transcription or a set of detected objects, whatever produced it. This package bundles the schemas so you can validate those records anywhere. (OATS is unrelated to the W3C Web Annotation data model, formerly Open Annotation.)
+OATS is a collection of strict, versioned JSON Schema 2020-12 schemas, defining and validating the structured outputs of machine learning models, workflow steps and annotation. Models, pipelines and people write the same JSON for each task, so a classification, a transcription or a set of detected objects has one shape, whatever produced it. This package bundles the schemas so you can validate those records anywhere. (OATS is unrelated to the W3C Web Annotation data model, formerly Open Annotation.)
 
-- **Zero dependencies, no I/O.** The schemas are embedded, so the package works the same in Node.js 22+, browsers, Deno, Bun and any bundler.
+- **No dependencies, no I/O.** The schemas are embedded in the module, so the package works the same in Node.js 22+, browsers, Deno, Bun and any bundler.
 - **Exactly as released.** Each schema is byte-identical to its [oatschema/oats](https://github.com/oatschema/oats) release.
-- **Typed.** ESM with TypeScript types; schema names are a union type, so typos fail at compile time.
+- **Typed.** ESM with TypeScript types. Schema names are a union type, so typos fail at compile time.
 
 ## Quick start
 
@@ -47,7 +47,7 @@ Browse every schema, its fields and the changelog at [oatschema.org](https://oat
 
 ## Validating records
 
-This release has no validator of its own; pass a schema to any JSON Schema 2020-12 validator. With [Ajv](https://ajv.js.org):
+`getSchema` returns a plain object for any JSON Schema 2020-12 validator. With [Ajv](https://ajv.js.org):
 
 ```ts
 import Ajv2020 from "ajv/dist/2020.js";
@@ -64,9 +64,9 @@ validate({ labels: [{ label: "cat", score: 0.92 }] }); // true
 validate({ labels: [{ label: "cat", score: 1.5 }] }); // false: /labels/0/score must be <= 1
 ```
 
-- **`x-license` and `x-version`** are the only non-standard keywords in OATS. Registering them keeps Ajv's strict mode on for everything else.
-- **The three relaxed options** switch off Ajv's own style checks, which reject some valid 2020-12 patterns that OATS uses, such as `required` inside an `if`.
-- **Compile each schema once** per Ajv instance and reuse the function. A second copy with the same `$id` throws; fetch the first with `ajv.getSchema(schema.$id)`.
+- `x-license` and `x-version` are the only non-standard keywords in OATS. Registering them keeps Ajv's strict mode on for everything else.
+- The three relaxed options switch off Ajv's style checks, which reject some valid 2020-12 patterns that OATS uses, such as `required` inside an `if`.
+- Compile each schema once per Ajv instance and reuse the function. Compiling a second copy with the same `$id` throws; fetch the first with `ajv.getSchema(schema.$id)`.
 
 ## API
 
@@ -78,16 +78,25 @@ validate({ labels: [{ label: "cat", score: 1.5 }] }); // false: /labels/0/score 
 | `SCHEMA_VERSION` | The default schema version, the newest bundled |
 | `SCHEMA_NAMES`, `SchemaName` | The schema names, as an array and a union type |
 | `UnknownSchemaError` | Thrown for a name that exists in no bundled version |
-| `SchemaLookupError` | Thrown for a version that isn't bundled, or lacks that schema |
+| `SchemaLookupError` | Thrown for a version that isn't bundled, or that lacks the schema |
 
-`version` must be exact: `"0.8.0"`, never `"0.8"` or `"latest"`. Both errors carry the requested `schemaName`, and `SchemaLookupError` also carries `schemaVersion`.
+- `version` must be exact: `"0.8.0"`, never `"0.8"` or `"latest"`.
+- Both errors carry the requested `schemaName`, and `SchemaLookupError` also carries `schemaVersion`.
 
 ## Versions
 
-**Schema versions.** Each schema states its release in `x-version`, and its `$id` includes it (`https://oatschema.org/0.8.0/classification`), so several versions can share one validator. Before OATS 1.0, a new release may reject records an older one accepted: pass the version a record was written for. This package bundles OATS 0.8.0, the first public release, and every later one. For 0.4.0 to 0.7.0, use [oatschema-py](https://github.com/oatschema/oatschema-py).
+**Schema versions.** Before OATS 1.0, a new release may reject records an older one accepted, or the reverse, so pass the version a record was written for.
 
-**Package versions.** The package has its own semantic version, which never encodes a schema version. Upgrading never removes a schema version. Before 1.0, a release that changes the default `SCHEMA_VERSION` is a minor bump, so npm's default `^0.x.y` range keeps your default fixed.
+- Each `$id` includes its version (`https://oatschema.org/0.8.0/classification`), so several versions can share one Ajv instance.
+- Each schema states its own version in `x-version`.
+- This package bundles OATS 0.8.0, the first public release, and every later one. For 0.4.0 to 0.7.0, use the Python package, [oatschema-py](https://github.com/oatschema/oatschema-py).
+
+**Package versions.** The package has its own semantic version, which never encodes a schema version; read `SCHEMA_VERSION` instead. Upgrading never removes a schema version, but it can move the default. Before 1.0, a release that changes the default is a minor bump, so npm's default `^0.x.y` range keeps your default fixed.
+
+## Contributing
+
+Schema changes belong in [oatschema/oats](https://github.com/oatschema/oats). For this package, see [CONTRIBUTING.md](https://github.com/oatschema/oatschema-js/blob/main/CONTRIBUTING.md). Commits need a DCO sign-off (`git commit -s`).
 
 ## License
 
-Apache-2.0. Copyright [The OATS Authors](AUTHORS).
+Apache-2.0. Copyright [The OATS Authors](https://github.com/oatschema/oatschema-js/blob/main/AUTHORS).
