@@ -84,7 +84,7 @@ validate({ labels: [{ label: "cat", score: 1.5 }] }); // false: /labels/0/score 
 
 ## Versions
 
-**Schema versions.** Each schema states its release in `x-version`, and its `$id` includes it (`https://oatschema.org/0.8.0/classification`), so several versions can share one validator. Before OATS 1.0, a new release may reject records an older one accepted: pass the version a record was written for. This package bundles OATS 0.8.0, the first public release, and every later one. For 0.4.0 to 0.7.0, use [oatschema-python](https://github.com/oatschema/oatschema-python).
+**Schema versions.** Each schema states its release in `x-version`, and its `$id` includes it (`https://oatschema.org/0.8.0/classification`), so several versions can share one validator. Before OATS 1.0, a new release may reject records an older one accepted: pass the version a record was written for. This package bundles OATS 0.8.0, the first public release, and every later one. For 0.4.0 to 0.7.0, use [oatschema-py](https://github.com/oatschema/oatschema-py).
 
 **Package versions.** The package has its own semantic version, which never encodes a schema version. Upgrading never removes a schema version. Before 1.0, a release that changes the default `SCHEMA_VERSION` is a minor bump, so npm's default `^0.x.y` range keeps your default fixed.
 
