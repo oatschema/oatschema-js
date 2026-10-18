@@ -2,7 +2,7 @@
 
 This package uses its own semantic version. `SCHEMA_VERSION` gives the default OATS schema version of each release.
 
-## 0.0.1 (unreleased)
+## 0.0.1 (2026-10-18)
 
 First release. Schema access only; validation is planned for 0.1.0.
 
