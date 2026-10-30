@@ -1,0 +1,4 @@
+{
+  "vocabulary": ["cat", "dog", "cat"],
+  "labels": [{ "label": "cat", "score": 0.9 }]
+}

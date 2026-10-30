@@ -1,0 +1,16 @@
+{
+  "entities": [
+    {
+      "label": "DATE",
+      "text": "January 1st",
+      "location": [
+        {
+          "type": "block",
+          "block_type": "box",
+          "page_number": 1,
+          "box": { "x": 10, "y": 10, "width": 100, "height": 50 }
+        }
+      ]
+    }
+  ]
+}

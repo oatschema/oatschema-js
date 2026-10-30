@@ -1,0 +1,12 @@
+{
+  "target": "daily_rainfall",
+  "unit": "mm",
+  "producer": "forecast-model-v4",
+  "score_explanation": "R-squared on the validation set, clipped to [-1, 1].",
+  "points": [
+    { "timestamp": "2026-05-01T00:00:00Z", "statistic": "median", "value": 2.4, "score": 0.81 },
+    { "timestamp": "2026-05-01T00:00:00Z", "statistic": "quantile", "quantile_level": 0.9, "value": 6.1 },
+    { "timestamp": "2026-05-02T00:00:00Z", "statistic": "median", "value": null },
+    { "timestamp": "2026-05-03T00:00:00Z", "statistic": "median", "value": 0.0, "score": -0.12 }
+  ]
+}

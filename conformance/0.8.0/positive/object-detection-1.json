@@ -1,0 +1,53 @@
+{
+  "unit": "px",
+  "score_explanation": "Detector confidence probability.",
+  "objects": [
+    {
+      "id": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+      "label": "car",
+      "score": 0.98,
+      "box": {
+        "x": 150,
+        "y": 200,
+        "width": 450,
+        "height": 200
+      }
+    },
+    {
+      "id": "1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed",
+      "parent_id": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+      "label": "face",
+      "score": 0.85,
+      "polygon": [
+        { "x": 350, "y": 220 },
+        { "x": 390, "y": 225 },
+        { "x": 385, "y": 270 },
+        { "x": 345, "y": 265 }
+      ]
+    },
+    {
+      "id": "7b3dcb6d-2b0d-4bad-9b1d-eb4d3b7d4bad",
+      "parent_id": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+      "label": "tire",
+      "score": 0.92,
+      "box": {
+        "x": 180,
+        "y": 350,
+        "width": 75,
+        "height": 75
+      }
+    },
+    {
+      "id": "3b7d4bad-9b1d-4bbf-b9d6-bcdbbfd4b2d9",
+      "parent_id": "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+      "label": "tire",
+      "score": 0.91,
+      "box": {
+        "x": 480,
+        "y": 350,
+        "width": 75,
+        "height": 75
+      }
+    }
+  ]
+}

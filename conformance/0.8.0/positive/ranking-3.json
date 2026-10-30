@@ -1,0 +1,18 @@
+{
+  "target": "recording-match",
+  "producer": "Chromaprint 1.5 + AcoustID",
+  "collection": "musicbrainz-recordings",
+  "score_explanation": "AcoustID match score.",
+  "results": [
+    {
+      "rank": 1,
+      "id": "b1a9c0e9-d987-4042-ae91-78d6a3267d69",
+      "title": "Clair de lune",
+      "score": 0.94,
+      "attributes": {
+        "offset_seconds": 92.5,
+        "matched_seconds": 18.0
+      }
+    }
+  ]
+}

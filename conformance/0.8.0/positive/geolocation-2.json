@@ -1,0 +1,23 @@
+{
+  "type": "Feature",
+  "id": "route-17",
+  "producer": "GPX Importer v2",
+  "bbox": [-3.2, 55.9, -3.1, 56.0],
+  "geometry": {
+    "type": "MultiLineString",
+    "coordinates": [
+      [
+        [-3.19, 55.95, 48.0],
+        [-3.17, 55.96, 52.5]
+      ],
+      [
+        [-3.15, 55.97],
+        [-3.12, 55.99]
+      ]
+    ]
+  },
+  "properties": {
+    "timestamp": "2026-04-02T08:15:00Z",
+    "activity": "cycling"
+  }
+}

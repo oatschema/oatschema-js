@@ -11,6 +11,7 @@ import {
   SCHEMA_VERSION,
   SchemaLookupError,
   type SchemaName,
+  type SchemaVersion,
   UnknownSchemaError,
 } from "oatschema";
 
@@ -87,18 +88,18 @@ describe("getSchema", () => {
     "__proto__",
   ]) {
     test(`rejects inexact or unbundled version ${JSON.stringify(version)}`, () => {
-      assert.throws(() => getSchema("classification", version), SchemaLookupError);
-      assert.throws(() => getSchema("classification", version), /is not bundled/);
+      assert.throws(() => getSchema("classification", version as SchemaVersion), SchemaLookupError);
+      assert.throws(() => getSchema("classification", version as SchemaVersion), /is not bundled/);
     });
   }
 
   test("rejects a non-string version", () => {
-    assert.throws(() => getSchema("classification", 0.8 as unknown as string), SchemaLookupError);
-    assert.throws(() => getSchema("classification", null as unknown as string), SchemaLookupError);
+    assert.throws(() => getSchema("classification", 0.8 as unknown as SchemaVersion), SchemaLookupError);
+    assert.throws(() => getSchema("classification", null as unknown as SchemaVersion), SchemaLookupError);
   });
 
   test("an unknown name wins over an unknown version", () => {
-    assert.throws(() => getSchema("nope" as SchemaName, "9.9.9"), UnknownSchemaError);
+    assert.throws(() => getSchema("nope" as SchemaName, "9.9.9" as SchemaVersion), UnknownSchemaError);
   });
 
   test("errors are distinct and carry what was requested", () => {
@@ -114,7 +115,7 @@ describe("getSchema", () => {
     assert.equal(caught.schemaName, "nope");
     assert.ok(caught.message.includes("ranking, regression, temporal-segmentation"));
     try {
-      getSchema("classification", "0.8");
+      getSchema("classification", "0.8" as SchemaVersion);
     } catch (error) {
       caught = error;
     }
@@ -140,7 +141,7 @@ describe("getSchemaJson", () => {
 
   test("reports name and version errors like getSchema", () => {
     assert.throws(() => getSchemaJson("nope" as SchemaName), UnknownSchemaError);
-    assert.throws(() => getSchemaJson("classification", "0.8"), SchemaLookupError);
-    assert.throws(() => getSchemaJson("classification", "0.7.0"), SchemaLookupError);
+    assert.throws(() => getSchemaJson("classification", "0.8" as SchemaVersion), SchemaLookupError);
+    assert.throws(() => getSchemaJson("classification", "0.7.0" as SchemaVersion), SchemaLookupError);
   });
 });

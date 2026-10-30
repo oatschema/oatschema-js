@@ -34,4 +34,13 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm pack --dry-run
-      - run: npx --yes jsr@0.14.3 publish --dry-run
+
+  corpus:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Check the conformance corpus against oatschema-py
+        run: |
+          python3 -m venv "$RUNNER_TEMP/venv"
+          "$RUNNER_TEMP/venv/bin/pip" install --quiet 'oatschema[validate]==0.8.0.1' 'jsonschema-rs==0.59.0'
+          "$RUNNER_TEMP/venv/bin/python" scripts/check_corpus.py

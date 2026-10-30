@@ -161,7 +161,8 @@ function checkLicense(name: string, license: unknown): void {
   }
 }
 
-function git(repo: string, ...args: string[]): Buffer {
+/** Run git in `repo` and return its output, throwing a `SyncError` if it fails. */
+export function git(repo: string, ...args: string[]): Buffer {
   const result = spawnSync("git", ["-C", repo, ...args], { maxBuffer: 256 * 1024 * 1024 });
   if (result.error) {
     throw new SyncError(`git ${args.join(" ")} failed: ${result.error.message}`);

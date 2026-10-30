@@ -1,0 +1,10 @@
+{
+  "description": "User preferences",
+  "data": {
+    "theme": "dark",
+    "notifications": {
+      "email": true,
+      "sms": false
+    }
+  }
+}

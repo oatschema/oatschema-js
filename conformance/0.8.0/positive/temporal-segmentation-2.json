@@ -1,0 +1,41 @@
+{
+  "producer": "pyannote/speaker-diarization-3.1",
+  "track_id": "1",
+  "vocabulary": [
+    "speaker"
+  ],
+  "segments": [
+    {
+      "id": "turn-1",
+      "group_id": "SPEAKER_00",
+      "label": "speaker",
+      "start_time": 0.48,
+      "end_time": 6.12
+    },
+    {
+      "id": "turn-2",
+      "group_id": "SPEAKER_01",
+      "label": "speaker",
+      "start_time": 5.8,
+      "end_time": 11.04
+    },
+    {
+      "id": "turn-3",
+      "group_id": "SPEAKER_00",
+      "label": "speaker",
+      "start_time": 10.95,
+      "end_time": 14.3
+    },
+    {
+      "id": "turn-4",
+      "group_id": "SPEAKER_02",
+      "label": "speaker",
+      "start_time": 14.62,
+      "end_time": 16.725
+    }
+  ],
+  "attributes": {
+    "source_format": "RTTM",
+    "uri": "meeting"
+  }
+}

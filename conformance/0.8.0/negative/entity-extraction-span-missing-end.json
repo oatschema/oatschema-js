@@ -1,0 +1,10 @@
+{
+  "vocabulary": ["ORG"],
+  "entities": [
+    {
+      "label": "ORG",
+      "text": "Acme Corp",
+      "location": [{ "type": "span", "start": 0 }]
+    }
+  ]
+}

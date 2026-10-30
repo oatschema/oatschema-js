@@ -6,10 +6,7 @@
     "rootDir": ".",
     "noEmit": true,
     "allowImportingTsExtensions": true,
-    "erasableSyntaxOnly": true,
-    "paths": {
-      "oatschema": ["./src/index.ts"]
-    }
+    "erasableSyntaxOnly": true
   },
   "include": ["src", "scripts", "test"]
 }

@@ -1,0 +1,11 @@
+{
+  "extraction_type": "lines",
+  "blocks": [
+    {
+      "block_type": "line",
+      "text": "Sample text",
+      "page_number": 1,
+      "box": { "x": 72, "y": 96, "width": 240, "height": 14 }
+    }
+  ]
+}

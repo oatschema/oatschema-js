@@ -1,0 +1,13 @@
+{
+  "labels": [
+    {
+      "label": "cat",
+      "score": 0.95,
+      "attributes": {
+        "justification": "Ears are visible",
+        "model_version": 1.0,
+        "illegal_nested_data": [ "this", "array", "is", "forbidden" ]
+      }
+    }
+  ]
+}

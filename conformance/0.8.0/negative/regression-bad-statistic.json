@@ -1,0 +1,10 @@
+{
+  "target": "stock_price",
+  "unit": "USD",
+  "points": [
+    {
+      "value": 150.00,
+      "statistic": "average"
+    }
+  ]
+}
