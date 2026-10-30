@@ -1,0 +1,9 @@
+{
+  "model": "claude-3-opus",
+  "prompt": "Hello world",
+  "response_data": "Hello!",
+  "generation_params": {
+    "temperature": 1.0,
+    "private_api_key": "sk-12345-invalid-key-leak"
+  }
+}

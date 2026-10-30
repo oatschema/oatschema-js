@@ -1,0 +1,47 @@
+{
+  "producer": "Manual Review",
+  "duration": 1834.5,
+  "vocabulary": [
+    "chapter",
+    "scene"
+  ],
+  "segments": [
+    {
+      "id": "ch-1",
+      "label": "chapter",
+      "title": "Intro",
+      "start_time": 0,
+      "end_time": 95.2
+    },
+    {
+      "id": "ch-2",
+      "label": "chapter",
+      "title": "Building the Frame",
+      "start_time": 95.2,
+      "end_time": 1834.5
+    },
+    {
+      "id": "sc-1",
+      "parent_id": "ch-1",
+      "label": "scene",
+      "description": "Host introduces the project in the workshop.",
+      "start_time": 0,
+      "end_time": 41.0
+    },
+    {
+      "id": "sc-2",
+      "parent_id": "ch-1",
+      "label": "scene",
+      "description": "Montage of the finished piece.",
+      "start_time": 41.0,
+      "end_time": 95.2
+    },
+    {
+      "id": "sc-3",
+      "parent_id": "ch-2",
+      "label": "scene",
+      "start_time": 95.2,
+      "end_time": 1834.5
+    }
+  ]
+}

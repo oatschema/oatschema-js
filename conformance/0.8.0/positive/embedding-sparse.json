@@ -1,0 +1,26 @@
+{
+  "model": "splade-v2-distilbert",
+  "target": "product_description",
+  "vector": {
+    "dimensions": 30522,
+    "indices": [
+      101,
+      2054,
+      3091,
+      4002,
+      15033,
+      28991
+    ],
+    "values": [
+      0.45,
+      1.2,
+      0.8,
+      0.15,
+      2.1,
+      0.05
+    ]
+  },
+  "attributes": {
+    "sparsity_ratio": 0.9998
+  }
+}

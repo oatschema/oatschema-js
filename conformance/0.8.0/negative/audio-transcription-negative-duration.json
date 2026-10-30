@@ -1,0 +1,13 @@
+{
+  "track_id": "1",
+  "language": "eng",
+  "duration": -15.5,
+  "text": "This record contains a negative duration, which must be rejected by the schema.",
+  "segments": [
+    {
+      "text": "This record contains a negative duration...",
+      "start_time": 0.0,
+      "end_time": 2.5
+    }
+  ]
+}

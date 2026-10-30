@@ -1,0 +1,958 @@
+{
+  "version": "0.8.0",
+  "engine": "jsonschema-rs 0.59.0",
+  "records": {
+    "date-time": {
+      "schema": "classification",
+      "record": {
+        "labels": [
+          {
+            "label": "cat",
+            "timestamp": null
+          }
+        ]
+      },
+      "path": [
+        "labels",
+        0,
+        "timestamp"
+      ]
+    },
+    "uri": {
+      "schema": "classification",
+      "record": {
+        "labels": [
+          {
+            "label": "cat"
+          }
+        ],
+        "vocabulary_url": null
+      },
+      "path": [
+        "vocabulary_url"
+      ]
+    }
+  },
+  "cases": [
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:00:00Z",
+      "valid": true
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20t12:00:00z",
+      "valid": true
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20 12:00:00Z",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:00:00+05:30",
+      "valid": true
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:00:00+0530",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:00:00",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:00:00.123456789Z",
+      "valid": true
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:00:00.Z",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:00Z",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-02-29T00:00:00Z",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2024-02-29T00:00:00Z",
+      "valid": true
+    },
+    {
+      "format": "date-time",
+      "value": "2026-02-30T00:00:00Z",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-04-31T00:00:00Z",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-13-01T00:00:00Z",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-00-01T00:00:00Z",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-01-00T00:00:00Z",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T24:00:00Z",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T23:60:00Z",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T23:59:60Z",
+      "valid": true
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T22:59:60Z",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T23:59:60+01:00",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T22:59:60-01:00",
+      "valid": true
+    },
+    {
+      "format": "date-time",
+      "value": "2026-12-31T23:59:60Z",
+      "valid": true
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:00:61Z",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:00:00+24:00",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:00:00+23:59",
+      "valid": true
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:00:00+23:60",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:00:00-00:00",
+      "valid": true
+    },
+    {
+      "format": "date-time",
+      "value": "0000-01-01T00:00:00Z",
+      "valid": true
+    },
+    {
+      "format": "date-time",
+      "value": "9999-12-31T23:59:59Z",
+      "valid": true
+    },
+    {
+      "format": "date-time",
+      "value": "+2026-10-20T12:00:00Z",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-1-20T12:00:00Z",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T1:00:00Z",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:00:00ZZ",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": " 2026-10-20T12:00:00Z",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:00:00Z ",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:00:00.1+01:00",
+      "valid": true
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:00:00,1Z",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "２０２６-10-20T12:00:00Z",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:00:00.٣Z",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "1900-02-29T00:00:00Z",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2000-02-29T00:00:00Z",
+      "valid": true
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:00:00+01",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T00:00:60Z",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-06-30T23:59:60Z",
+      "valid": true
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:59:60Z",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:00:00+00:60",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:00:00+99:00",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T00:59:60+01:00",
+      "valid": true
+    },
+    {
+      "format": "date-time",
+      "value": "2026-01-01T00:00:60+00:01",
+      "valid": true
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:00:00.0000000000000000000001Z",
+      "valid": true
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:00:00\nZ",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:00:00Z\n",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "12:00:00Z",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:00:00+05:30:00",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:00:00-23:59",
+      "valid": true
+    },
+    {
+      "format": "date-time",
+      "value": "10000-01-01T00:00:00Z",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:00:00.5-00:00",
+      "valid": true
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T23:59:60.5Z",
+      "valid": true
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:00:00 Z",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:00:00UTC",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:00:00GMT",
+      "valid": false
+    },
+    {
+      "format": "date-time",
+      "value": "2026-10-20T12:00:00+5:30",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "x:",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "http://example.com",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "https://example.com/a b",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "http://exa mple.com",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "http://[::1]/",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "http://[::1",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "urn:isbn:0451450523",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "mailto:a@b.c",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "//example.com",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "/relative",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "relative",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "http:",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "HTTP://EXAMPLE.COM",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "1http://x",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "h+t-t.p://x",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "http://example.com/%zz",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "http://example.com/%20",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "http://example.com/ä",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "http://ä.com",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "http://example.com/?q=a b",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "http://example.com/#frag#frag",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "http://user:pass@host:80/p",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "http://host:port",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "http://host:99999",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "http://host:-1",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "file:///etc/passwd",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "a:b:c",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "a:\\b",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "a:<b>",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "a:{b}",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "a:|b",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "a:^b",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "a:`b",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "a:\"b",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "a:b\n",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "tel:+1-201-555-0123",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "http://example.com/\u0000",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "http://[v1.x]/",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "http://[fe80::1%25eth0]/",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "http://256.256.256.256/",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "http://example.com:80:80/",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": ":",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "x:/",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "x://",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "x:///",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "x://a@b@c",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "javascript:alert(1)",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "data:text/plain,hi",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "http://%41.com",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "http://a_b.com",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "http://-a.com",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "http://a..com",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "http://example.com./",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "x:\t",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "x:%",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "x:%4",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "http://[::1]:80/",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "http://ex%41mple.com",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "http://[::]/",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "http://[1::]/",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "http://[::1:2:3:4:5:6:7]/",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "http://[1:2:3:4:5:6:7:8]/",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "http://[1:2:3:4:5:6:7:8:9]/",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "http://[1:2:3:4:5:6:7::]/",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "http://[1::2::3]/",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "http://[::ffff:1.2.3.4]/",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "http://[::ffff:256.2.3.4]/",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "http://[::ffff:01.2.3.4]/",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "http://[1:2:3:4:5:6:1.2.3.4]/",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "http://[1:2:3:4:5:6:7:1.2.3.4]/",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "http://[12345::]/",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "http://[g::]/",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "http://[v.x]/",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "http://[vg.x]/",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "http://[V1.x]/",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "http://[v1.]/",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "http://[]/",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "http://[::1]x/",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "http://a[b]/",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "http://[::1]:/",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "http://host:/",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "http://@host/",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "http://:@host/",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "http://h%2/",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "x:?#",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "x:#",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "x:?",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "x:/?a/b?c#d/e?f",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "x:a//b",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "x:a/b//c",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "x:@",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "x::",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "x://[::1]",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "x://h/%C3%A4",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "x://h/~user",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "x://h/!$&'()*+,;=",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "x://h?[]",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "x://h#[",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "x://h/[",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "x://h:12a",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "x://h:12/",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "x://h@",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "x://u@h@",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "a+b.c-d:x",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "+a:x",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": ".a:x",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "-a:x",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "a_b:x",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "A:x",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "x://h/ ",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "x: ",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "x://[::1]%25/",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "x://1.2.3.4/",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "x://01.2.3.4/",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "x://h/a?b=c&d=e#f",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "x://h/%",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "x://h/%a",
+      "valid": false
+    },
+    {
+      "format": "uri",
+      "value": "x://h/%aA",
+      "valid": true
+    },
+    {
+      "format": "uri",
+      "value": "x://h/%Aa%",
+      "valid": false
+    }
+  ]
+}

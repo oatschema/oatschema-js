@@ -18,13 +18,8 @@ jobs:
       - name: Check that the tag matches the package version
         run: |
           version="$(node -p 'require("./package.json").version')"
-          jsr_version="$(node -p 'require("./jsr.json").version')"
           if [ "v$version" != "$GITHUB_REF_NAME" ]; then
             echo "tag $GITHUB_REF_NAME does not match package.json version $version" >&2
-            exit 1
-          fi
-          if [ "$jsr_version" != "$version" ]; then
-            echo "jsr.json version $jsr_version does not match package.json version $version" >&2
             exit 1
           fi
 

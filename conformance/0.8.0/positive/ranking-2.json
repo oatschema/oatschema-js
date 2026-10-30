@@ -1,0 +1,23 @@
+{
+  "target": "relevance",
+  "producer": "text-embedding-3-small",
+  "query": "How much notice is needed to end the lease?",
+  "collection": "lease-agreements",
+  "score_explanation": "Cosine similarity.",
+  "results": [
+    {
+      "rank": 1,
+      "id": "https://wiki.example.org/leases/193#12",
+      "title": "Termination by the Tenant",
+      "text": "Two months' written notice is required.",
+      "score": 0.83
+    },
+    {
+      "rank": 2,
+      "id": "https://wiki.example.org/leases/193#14",
+      "title": "Break Clause",
+      "text": "Either party may end the lease early.",
+      "score": 0.71
+    }
+  ]
+}

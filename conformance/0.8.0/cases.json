@@ -1,0 +1,851 @@
+{
+  "tag": "v0.8.0",
+  "commit": "e3273992b7ec044d3d97991eea30035bc0ad492c",
+  "source": "reference/examples",
+  "cases": [
+    {
+      "file": "positive/audio-transcription-1.json",
+      "sha256": "1cb258d4ddbd9f4efc758b06ac65251838b1f413c6b3ba60a252035f8ac09bb3",
+      "schema": "audio-transcription",
+      "version": "0.8.0",
+      "valid": true,
+      "valid_without_formats": true
+    },
+    {
+      "file": "positive/classification-1.json",
+      "sha256": "8eb9c2d26805d8b3bec8144fad628417526a212943dd634938de5cec797eb86d",
+      "schema": "classification",
+      "version": "0.8.0",
+      "valid": true,
+      "valid_without_formats": true
+    },
+    {
+      "file": "positive/document-extraction-1.json",
+      "sha256": "d54a850e6de7e06a94f6c5969e7e0616fd1031c9ddcca98cd85ba3c150d5334f",
+      "schema": "document-extraction",
+      "version": "0.8.0",
+      "valid": true,
+      "valid_without_formats": true
+    },
+    {
+      "file": "positive/document-extraction-2.json",
+      "sha256": "cc80b2f993bc1f794bcf6b55d9c9bd374202543414b089fb8bd059cb4fe26887",
+      "schema": "document-extraction",
+      "version": "0.8.0",
+      "valid": true,
+      "valid_without_formats": true
+    },
+    {
+      "file": "positive/embedding-dense.json",
+      "sha256": "689ff73d566a66b0fe6926b3eda4400c752b1784d51a8a16661a529000e6d49a",
+      "schema": "embedding",
+      "version": "0.8.0",
+      "valid": true,
+      "valid_without_formats": true
+    },
+    {
+      "file": "positive/embedding-sparse.json",
+      "sha256": "9a22abe2409a2913f3c909c87dda3c4fafdd3e895fb4341563600aba9ef839ec",
+      "schema": "embedding",
+      "version": "0.8.0",
+      "valid": true,
+      "valid_without_formats": true
+    },
+    {
+      "file": "positive/entity-extraction-1.json",
+      "sha256": "75a974d1b236b220885c77b9979066836251dd80798d23306829ea4d4eec8288",
+      "schema": "entity-extraction",
+      "version": "0.8.0",
+      "valid": true,
+      "valid_without_formats": true
+    },
+    {
+      "file": "positive/entity-extraction-2.json",
+      "sha256": "839bc821e481bf86f8b1ffe4b92724356af3f9dca1d9aaef78c3eac5323c97b8",
+      "schema": "entity-extraction",
+      "version": "0.8.0",
+      "valid": true,
+      "valid_without_formats": true
+    },
+    {
+      "file": "positive/entity-extraction-3.json",
+      "sha256": "94207e75331162d5d720b396ba483a94dbb7475aec477eb1a13a7e3b0ad5cff6",
+      "schema": "entity-extraction",
+      "version": "0.8.0",
+      "valid": true,
+      "valid_without_formats": true
+    },
+    {
+      "file": "positive/generic-1.json",
+      "sha256": "4487aa226cc7468d2e5e99d7d991898aa081911d7528c873af990c7561f512f3",
+      "schema": "generic",
+      "version": "0.8.0",
+      "valid": true,
+      "valid_without_formats": true
+    },
+    {
+      "file": "positive/geolocation-1.json",
+      "sha256": "81ba254b4b44b5d4efa4cb2dd624fb95cd8df1bf0104e70962691e26884c270e",
+      "schema": "geolocation",
+      "version": "0.8.0",
+      "valid": true,
+      "valid_without_formats": true
+    },
+    {
+      "file": "positive/geolocation-2.json",
+      "sha256": "05ade0dcd151455b847874d44e1d1ee67b0dc302d08607a870de02df579e2311",
+      "schema": "geolocation",
+      "version": "0.8.0",
+      "valid": true,
+      "valid_without_formats": true
+    },
+    {
+      "file": "positive/llm-output-1.json",
+      "sha256": "382232773650bfe8f035e98040c83da07b1062db625e0ed271f74baed6c63c4d",
+      "schema": "llm-output",
+      "version": "0.8.0",
+      "valid": true,
+      "valid_without_formats": true
+    },
+    {
+      "file": "positive/object-detection-1.json",
+      "sha256": "d27747f78cfc61ffca761b3327023574782314371db5c4a19f7ef887242d1016",
+      "schema": "object-detection",
+      "version": "0.8.0",
+      "valid": true,
+      "valid_without_formats": true
+    },
+    {
+      "file": "positive/object-detection-2.json",
+      "sha256": "38ee0f2a76e25bec139c683853b536bdec2dc1a04f2cbfa46f16ad8afe88d2eb",
+      "schema": "object-detection",
+      "version": "0.8.0",
+      "valid": true,
+      "valid_without_formats": true
+    },
+    {
+      "file": "positive/ranking-1.json",
+      "sha256": "68728d8aec88f85ca94494c7f22c61fd0b526040c8100fffa94361ebfd8b30b1",
+      "schema": "ranking",
+      "version": "0.8.0",
+      "valid": true,
+      "valid_without_formats": true
+    },
+    {
+      "file": "positive/ranking-2.json",
+      "sha256": "758cdc1b4211f5eb021757b98fbf29157d1ad616cd26f604b1eb7f3cad5de15d",
+      "schema": "ranking",
+      "version": "0.8.0",
+      "valid": true,
+      "valid_without_formats": true
+    },
+    {
+      "file": "positive/ranking-3.json",
+      "sha256": "28d7a590b8ad7542718c09528461e7e5f1d02e2ab6890430190e88886101580c",
+      "schema": "ranking",
+      "version": "0.8.0",
+      "valid": true,
+      "valid_without_formats": true
+    },
+    {
+      "file": "positive/ranking-4.json",
+      "sha256": "930b4c34af659c3fb848ec35adac0439122e4f5cebcda52279c4bb2e0adbb7bf",
+      "schema": "ranking",
+      "version": "0.8.0",
+      "valid": true,
+      "valid_without_formats": true
+    },
+    {
+      "file": "positive/regression-1.json",
+      "sha256": "8dedb221599cec3558eb40233efa6af7ebde88b02e19500c4e9dcfc630368a7e",
+      "schema": "regression",
+      "version": "0.8.0",
+      "valid": true,
+      "valid_without_formats": true
+    },
+    {
+      "file": "positive/regression-2.json",
+      "sha256": "830424539f24c50a02fc518fdcfbcdcb9b2bd9ca399a8f9a12836ad95f9257af",
+      "schema": "regression",
+      "version": "0.8.0",
+      "valid": true,
+      "valid_without_formats": true
+    },
+    {
+      "file": "positive/temporal-segmentation-1.json",
+      "sha256": "9f2355687bbe2700f51db32f8338172c0e05b16f96662421d1bd2ba3fd4db239",
+      "schema": "temporal-segmentation",
+      "version": "0.8.0",
+      "valid": true,
+      "valid_without_formats": true
+    },
+    {
+      "file": "positive/temporal-segmentation-2.json",
+      "sha256": "b76a8fa99b03c6e9cedc00cc1b2c61b8df84176a434de08bb677cd0961514e47",
+      "schema": "temporal-segmentation",
+      "version": "0.8.0",
+      "valid": true,
+      "valid_without_formats": true
+    },
+    {
+      "file": "positive/temporal-segmentation-3.json",
+      "sha256": "103aa63714771acea95d7903b6b04538d7c9aac51475423b5709dae26d1042c0",
+      "schema": "temporal-segmentation",
+      "version": "0.8.0",
+      "valid": true,
+      "valid_without_formats": true
+    },
+    {
+      "file": "positive/temporal-segmentation-4.json",
+      "sha256": "e218cbdc92fb944df9f0fcb267abeb62286fbda1d9ca694b14b4764f2c74346a",
+      "schema": "temporal-segmentation",
+      "version": "0.8.0",
+      "valid": true,
+      "valid_without_formats": true
+    },
+    {
+      "file": "positive/temporal-segmentation-5.json",
+      "sha256": "060bc42e91a1e48b8664a6a62a87e4d372d7bf1455eb77c7e64d0b46bec33ab3",
+      "schema": "temporal-segmentation",
+      "version": "0.8.0",
+      "valid": true,
+      "valid_without_formats": true
+    },
+    {
+      "file": "negative/audio-transcription-bad-language-code.json",
+      "sha256": "362c009dd0dc8e95c881fa38a803b6bf995ed798e73868b4ec86c45cb3670678",
+      "schema": "audio-transcription",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/language",
+        "message": "is longer than"
+      }
+    },
+    {
+      "file": "negative/audio-transcription-empty-segments.json",
+      "sha256": "ed18dede38554e03a758c5a2071fbcf29e7e16feb372db01daa56e48ec1be57b",
+      "schema": "audio-transcription",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/segments",
+        "message": "has less than"
+      }
+    },
+    {
+      "file": "negative/audio-transcription-invalid-segment.json",
+      "sha256": "f1411b5d608c01245ef55cc4bc0934f39306d00ceb485dc17aac5ec765195fcc",
+      "schema": "audio-transcription",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/segments/0/speaker",
+        "message": "\"id\" is a required property"
+      }
+    },
+    {
+      "file": "negative/audio-transcription-missing-content.json",
+      "sha256": "4432bc3db9c87e41d0b2519400d766f3e7a9263abee73a275394161e961ad055",
+      "schema": "audio-transcription",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "",
+        "message": "is not valid under any of the schemas"
+      }
+    },
+    {
+      "file": "negative/audio-transcription-negative-duration.json",
+      "sha256": "64e8bd0338cac9aec2babf7e918cb1ecab15bb8482c01fb86b29fe1127e371ad",
+      "schema": "audio-transcription",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/duration",
+        "message": "is less than the minimum"
+      }
+    },
+    {
+      "file": "negative/classification-bad-attributes.json",
+      "sha256": "cf978758b39e2972815d2ebb4d3216ce80f9dd670ac990bc90d1211bbb606d3d",
+      "schema": "classification",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/labels/0/attributes/illegal_nested_data",
+        "message": "is not valid under any of the schemas"
+      }
+    },
+    {
+      "file": "negative/classification-bad-timestamp-length.json",
+      "sha256": "ff5276d8e72bdfa431eb1bff03971a4f87e056ed6195a37c54d78b2df4869115",
+      "schema": "classification",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/labels/0/timestamp",
+        "message": "is longer than"
+      }
+    },
+    {
+      "file": "negative/classification-duplicate-vocabulary.json",
+      "sha256": "dbcc6ed658cd7e6630b2aa52b430f24b9b1a30df27311f1f013d4d5761cc3d4a",
+      "schema": "classification",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/vocabulary",
+        "message": "has non-unique elements"
+      }
+    },
+    {
+      "file": "negative/classification-invalid-structure.json",
+      "sha256": "c6d95b5b6b78f7c83a3f319ca47949ff0884181006b7ce37b3ca6c08caed9b54",
+      "schema": "classification",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/vocabulary",
+        "message": "is not of type"
+      }
+    },
+    {
+      "file": "negative/document-extraction-bad-missing-text.json",
+      "sha256": "608211c8fa40f16723e9b1be334cdb096cef2c925824863c7388f417f1e16763",
+      "schema": "document-extraction",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/blocks/0",
+        "message": "\"text\" is a required property"
+      }
+    },
+    {
+      "file": "negative/document-extraction-bad-multipolygon-norm.json",
+      "sha256": "03f4c9f461d35585a1646a8bfdca066d045f4a88727d28fd44a99eadef88e17b",
+      "schema": "document-extraction",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/blocks/0/multi_polygon/0/1/x",
+        "message": "is greater than the maximum"
+      }
+    },
+    {
+      "file": "negative/document-extraction-bad-normalization.json",
+      "sha256": "5eb6701e0746fa16dc504b017482801b504418eb8235a3f64339b7725c29a788",
+      "schema": "document-extraction",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/blocks/0/box/width",
+        "message": "is greater than the maximum"
+      }
+    },
+    {
+      "file": "negative/document-extraction-bad-page-width.json",
+      "sha256": "05beb0496f3224097cf72894c8b63249cb99fa4bec301139bb6c6e82841b017b",
+      "schema": "document-extraction",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/page_width",
+        "message": "is not valid under any of the schemas"
+      }
+    },
+    {
+      "file": "negative/document-extraction-missing-unit.json",
+      "sha256": "6bf1ddf3d2380a462c1b3f2736b163672f8f48ceb021288f09a1baa3f711f7ac",
+      "schema": "document-extraction",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "",
+        "message": "\"unit\" is a required property"
+      }
+    },
+    {
+      "file": "negative/document-extraction-unknown-block.json",
+      "sha256": "8df10ed2dbde201a9cbb876e2251375afebf97bcb245696a04c95e3ad22a352b",
+      "schema": "document-extraction",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/blocks/0/block_type",
+        "message": "is not one of"
+      }
+    },
+    {
+      "file": "negative/embedding-bad-vector-type.json",
+      "sha256": "5dba6573e8426ee9fe830014042038dff55058fa6e446612e24b78e2117f993e",
+      "schema": "embedding",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/vector",
+        "message": "is not valid under any of the schemas"
+      }
+    },
+    {
+      "file": "negative/embedding-nested-attributes.json",
+      "sha256": "b48b1e65b2c6bbdc4016946c8be3cfae09bfea83d5ada4e7578fedecede6e05c",
+      "schema": "embedding",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/attributes/source_model",
+        "message": "is not valid under any of the schemas"
+      }
+    },
+    {
+      "file": "negative/embedding-sparse-bad-types.json",
+      "sha256": "8605397803065b58a80f0a2127ec14316c9c76a10140c886e2a4b99f9359fb2a",
+      "schema": "embedding",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/vector",
+        "message": "is not valid under any of the schemas"
+      }
+    },
+    {
+      "file": "negative/embedding-sparse-missing-dimensions.json",
+      "sha256": "94044ad9b621644851d4349b60fed80b085e65d5cbb1d97272be285a0f83a385",
+      "schema": "embedding",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/vector",
+        "message": "is not valid under any of the schemas"
+      }
+    },
+    {
+      "file": "negative/entity-extraction-bad-geometry.json",
+      "sha256": "3fe20f43b30e3dbb44ad203df13fc33d6782672fd50202cf06e2af69e4c665bc",
+      "schema": "entity-extraction",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "",
+        "message": "\"unit\" is a required property"
+      }
+    },
+    {
+      "file": "negative/entity-extraction-missing-label.json",
+      "sha256": "930bc033d0e9a9fdabeed10b73ea8b071f6623c213b48db63fb806d96e0b704e",
+      "schema": "entity-extraction",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/entities/0",
+        "message": "\"label\" is a required property"
+      }
+    },
+    {
+      "file": "negative/entity-extraction-negative-coordinates.json",
+      "sha256": "7e2eb6a25bbd387564b94a2bcc17caae83c2e575063e2c0c2a6ae15527d19f6d",
+      "schema": "entity-extraction",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/entities/0/location/0",
+        "message": "is not valid under any of the schemas"
+      }
+    },
+    {
+      "file": "negative/entity-extraction-relation-missing-subject.json",
+      "sha256": "ed71c517a5067c467ee7db319bfc72b4e3863d57c79a9b1c4ac8e519214d9f83",
+      "schema": "entity-extraction",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/relations/0",
+        "message": "\"subject_id\" is a required property"
+      }
+    },
+    {
+      "file": "negative/entity-extraction-relations-without-entity-id.json",
+      "sha256": "931e8bb81fd06883b48f3097e7a4bb519db213037c69dd3171b010e815ac2f47",
+      "schema": "entity-extraction",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/entities/1",
+        "message": "\"id\" is a required property"
+      }
+    },
+    {
+      "file": "negative/entity-extraction-score-out-of-range.json",
+      "sha256": "467d03de50f61ac9387883c157f8b2941754de32b759793848bf190bb68886ac",
+      "schema": "entity-extraction",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/entities/0/score",
+        "message": "is greater than the maximum"
+      }
+    },
+    {
+      "file": "negative/entity-extraction-span-missing-end.json",
+      "sha256": "0bf81354a1a742da257313948e07a7a7e5c66322bd96f7b6e7f1cd1426fb5312",
+      "schema": "entity-extraction",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/entities/0/location/0",
+        "message": "is not valid under any of the schemas"
+      }
+    },
+    {
+      "file": "negative/generic-array-in-data.json",
+      "sha256": "8485bc401c103fcdc7541502ec64bce9557748bdce10e7d772b1b41c6c44cbb3",
+      "schema": "generic",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/data/tags_list",
+        "message": "is not valid under any of the schemas"
+      }
+    },
+    {
+      "file": "negative/generic-long-key.json",
+      "sha256": "eeb1e118fd404270dbdcdbbd65390427932d1a5733b1156e981d148edbead2e7",
+      "schema": "generic",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/data",
+        "message": "is longer than"
+      }
+    },
+    {
+      "file": "negative/generic-nested-data.json",
+      "sha256": "5e95ff7b8d20d1de729edce0881d795445662a2590fde742c9fab1d1f56e3e7a",
+      "schema": "generic",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/data/notifications",
+        "message": "is not valid under any of the schemas"
+      }
+    },
+    {
+      "file": "negative/geolocation-bad-bbox-length.json",
+      "sha256": "a7ac79828a0580dc604a14c8aefcea5c3f6f6c0b74222b4129cf8ce1cd6802c1",
+      "schema": "geolocation",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/bbox",
+        "message": "is not valid under any of the schemas"
+      }
+    },
+    {
+      "file": "negative/geolocation-bad-coordinates.json",
+      "sha256": "8df6838fff007fe135143d8120ca71ae0521c8a6122c74e1bedf4e092055256e",
+      "schema": "geolocation",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/geometry",
+        "message": "is not valid under any of the schemas"
+      }
+    },
+    {
+      "file": "negative/geolocation-latitude-out-of-range.json",
+      "sha256": "0dd764cb8a09be975f16fbdb6417e868c6477108d5a9b0ec3d4e456658dc0107",
+      "schema": "geolocation",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/geometry",
+        "message": "is not valid under any of the schemas"
+      }
+    },
+    {
+      "file": "negative/geolocation-unbounded-foreign-member.json",
+      "sha256": "8a7d3d48454a48ed0fede07f88123ececb9d3338fee5465f75f5a26e05aba78d",
+      "schema": "geolocation",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/custom_data",
+        "message": "is not valid under any of the schemas"
+      }
+    },
+    {
+      "file": "negative/llm-output-extra-fields.json",
+      "sha256": "b2911258eee1578c331a1b470987308a200bd938b61cbe5fc6cd9a2d02d7f94f",
+      "schema": "llm-output",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/generation_params",
+        "message": "Additional properties are not allowed"
+      }
+    },
+    {
+      "file": "negative/llm-output-invalid-response-type.json",
+      "sha256": "ed3f1d30483a962a8854c844923dc60186975394282b4fafad4ce81eba2c5e2b",
+      "schema": "llm-output",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/response_data",
+        "message": "is not of type"
+      }
+    },
+    {
+      "file": "negative/llm-output-missing-required.json",
+      "sha256": "c0632624bbfdc58e56aa739f84306cae071d3e45acb065ec7323f53b76bddbb5",
+      "schema": "llm-output",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "",
+        "message": "\"model\" is a required property"
+      }
+    },
+    {
+      "file": "negative/object-detection-invalid-polygon.json",
+      "sha256": "3127b9f64df156485078f4d597454dabe0835a42401dd9867d4999409d11f49e",
+      "schema": "object-detection",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/objects/0/polygon",
+        "message": "has less than"
+      }
+    },
+    {
+      "file": "negative/object-detection-missing-geometry.json",
+      "sha256": "03dcb5d5201da909b4acd20a6f4bfe4ec585f262172598eca165354e0d7d321d",
+      "schema": "object-detection",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/objects/0",
+        "message": "is not valid under any of the schemas"
+      }
+    },
+    {
+      "file": "negative/object-detection-nested-attributes.json",
+      "sha256": "9a9f51e9ca5dee8bef9fbf6555a80ea432913530f59bcb913a022e6c909e61c8",
+      "schema": "object-detection",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/objects/0/attributes/metadata",
+        "message": "is not valid under any of the schemas"
+      }
+    },
+    {
+      "file": "negative/ranking-missing-id.json",
+      "sha256": "cc900b1f6a6bd6b8e23b5b28cde87077358f697c5e0dc7ab1efe844b5800895a",
+      "schema": "ranking",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/results/0",
+        "message": "\"id\" is a required property"
+      }
+    },
+    {
+      "file": "negative/ranking-rank-zero.json",
+      "sha256": "a3350cbd77b6905174bb8e88daaaa5431373ee2ef3c8444ff76508b962bc197c",
+      "schema": "ranking",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/results/0/rank",
+        "message": "is less than the minimum"
+      }
+    },
+    {
+      "file": "negative/regression-bad-statistic.json",
+      "sha256": "acade69c0cff6d8e9060392b5379e74e1a6a12fe4ba6a30aad60e6292071f022",
+      "schema": "regression",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/points/0/statistic",
+        "message": "is not one of"
+      }
+    },
+    {
+      "file": "negative/regression-empty-points.json",
+      "sha256": "40f1259f5bd0143cb26329d3e1ddf7f6c1465934f56d6609afd754a35f03722f",
+      "schema": "regression",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/points",
+        "message": "has less than"
+      }
+    },
+    {
+      "file": "negative/regression-invalid-quantile.json",
+      "sha256": "726c98f3692a398806d0ef54615dd7fcd2112de3994d22aa716c4915d4c37bec",
+      "schema": "regression",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/points/0/quantile_level",
+        "message": "is greater than the maximum"
+      }
+    },
+    {
+      "file": "negative/regression-missing-value.json",
+      "sha256": "8c0dcd8b774757fbf72c93765347ae361ecbb52c691a4a578e4314ed5aa83986",
+      "schema": "regression",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/points/0",
+        "message": "\"value\" is a required property"
+      }
+    },
+    {
+      "file": "negative/regression-nested-attributes.json",
+      "sha256": "25020ea2dfa9350702de09c6c37ebd3b969f01d62e5fa2a0912996e2469c20a8",
+      "schema": "regression",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/attributes/metadata",
+        "message": "is not valid under any of the schemas"
+      }
+    },
+    {
+      "file": "negative/regression-quantile-missing-level.json",
+      "sha256": "7223eab36eac125e87ff8138b00da1c24e2314ff2c06a4d27002375e6ff5fab0",
+      "schema": "regression",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/points/0",
+        "message": "\"quantile_level\" is a required property"
+      }
+    },
+    {
+      "file": "negative/temporal-segmentation-duplicate-vocabulary.json",
+      "sha256": "21f4937884b23769ce39cbe479e70f64697f9d4c20cacfee9c484a24790badc0",
+      "schema": "temporal-segmentation",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/vocabulary",
+        "message": "has non-unique elements"
+      }
+    },
+    {
+      "file": "negative/temporal-segmentation-integer-group-id.json",
+      "sha256": "e932b7aca63a786f104feba7b40e8288483bd70cd1b487457e3d455dc12fce9c",
+      "schema": "temporal-segmentation",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/segments/0/group_id",
+        "message": "is not of type \"string\""
+      }
+    },
+    {
+      "file": "negative/temporal-segmentation-long-group-id.json",
+      "sha256": "231db100dae7085e461da894dc73dec57dbd85e809c092f6322727598ab6307a",
+      "schema": "temporal-segmentation",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/segments/0/group_id",
+        "message": "is longer than 128 characters"
+      }
+    },
+    {
+      "file": "negative/temporal-segmentation-missing-label.json",
+      "sha256": "41597fa93a414e42b7ca9a07802cd23e31917ee1bda55d84dfb01cd6b2b596c7",
+      "schema": "temporal-segmentation",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/segments/0",
+        "message": "\"label\" is a required property"
+      }
+    },
+    {
+      "file": "negative/temporal-segmentation-negative-start-time.json",
+      "sha256": "c932db8c392abac78e860f5ef9ba074405c49bf184d8394ad785739fa0d669db",
+      "schema": "temporal-segmentation",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/segments/0/start_time",
+        "message": "is less than the minimum"
+      }
+    },
+    {
+      "file": "negative/temporal-segmentation-nested-attributes.json",
+      "sha256": "8817433f6af0bad12631919f5a50d7affaa74b0ae17b345d696f1b53ebafcfcf",
+      "schema": "temporal-segmentation",
+      "version": "0.8.0",
+      "valid": false,
+      "valid_without_formats": false,
+      "error": {
+        "path": "/segments/0/attributes/shots",
+        "message": "is not valid under any of the schemas"
+      }
+    }
+  ]
+}

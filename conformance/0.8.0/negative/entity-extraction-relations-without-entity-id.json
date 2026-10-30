@@ -1,0 +1,10 @@
+{
+  "entities": [
+    { "id": "e1", "label": "ITEM", "text": "Hinge" },
+    { "label": "QUANTITY", "text": "4" }
+  ],
+  "relations": [
+    { "label": "quantity_of", "subject_id": "e2",
+      "object_id": "e1" }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "producer": "bge-reranker-v2-m3",
+  "results": [
+    { "rank": 0, "id": "sku-48213", "score": 0.98 }
+  ]
+}

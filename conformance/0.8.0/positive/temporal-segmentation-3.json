@@ -1,0 +1,28 @@
+{
+  "producer": "sports-event-detector-v2",
+  "vocabulary_url": "https://example.com/vocabularies/football-events.json",
+  "score_explanation": "Detector confidence probability.",
+  "segments": [
+    {
+      "label": "goal",
+      "start_time": 1312.0,
+      "end_time": 1312.0,
+      "score": 0.97
+    },
+    {
+      "label": "celebration",
+      "start_time": 1312.4,
+      "end_time": 1341.9,
+      "score": 0.82,
+      "attributes": {
+        "team": "home"
+      }
+    },
+    {
+      "label": "replay",
+      "start_time": 1330.0,
+      "end_time": 1362.5,
+      "score": 0.76
+    }
+  ]
+}

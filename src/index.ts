@@ -4,49 +4,17 @@
 /**
  * The OATS (Open Annotation Task Schemas) JSON schemas, bundled for JavaScript and TypeScript.
  *
+ * Validation is in `oatschema/validate`, and in `oatschema/validate/<name>` for a single schema.
+ *
  * @module
  */
 
 import { BUNDLED } from "./bundled.ts";
+import { missingFromVersion, UnknownSchemaError, unbundledVersion } from "./errors.ts";
+import { SCHEMA_NAMES, SCHEMA_VERSION, SCHEMA_VERSIONS, type SchemaName, type SchemaVersion } from "./names.ts";
 
-/** The names of the schemas in {@link SCHEMA_VERSION}. Older bundled versions contain a subset of them. */
-export const SCHEMA_NAMES: readonly [
-  "audio-transcription",
-  "classification",
-  "document-extraction",
-  "embedding",
-  "entity-extraction",
-  "generic",
-  "geolocation",
-  "llm-output",
-  "object-detection",
-  "ranking",
-  "regression",
-  "temporal-segmentation",
-] = Object.freeze([
-  "audio-transcription",
-  "classification",
-  "document-extraction",
-  "embedding",
-  "entity-extraction",
-  "generic",
-  "geolocation",
-  "llm-output",
-  "object-detection",
-  "ranking",
-  "regression",
-  "temporal-segmentation",
-] as const);
-
-/** The name of an OATS schema, such as `"classification"`. */
-export type SchemaName = (typeof SCHEMA_NAMES)[number];
-
-/**
- * The newest bundled OATS schema version, used when no version is given.
- *
- * A schema's own version is in its `x-version` keyword.
- */
-export const SCHEMA_VERSION = "0.8.0";
+export { SchemaLookupError, UnknownSchemaError } from "./errors.ts";
+export { isSchemaVersion, SCHEMA_NAMES, SCHEMA_VERSION, type SchemaName, type SchemaVersion } from "./names.ts";
 
 /** A JSON value, as parsed from a schema file. */
 export type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
@@ -54,65 +22,25 @@ export type JsonValue = string | number | boolean | null | JsonValue[] | { [key:
 /** A parsed JSON Schema document. */
 export type Schema = { [key: string]: JsonValue };
 
-/** Thrown when a schema name exists in no bundled version. */
-export class UnknownSchemaError extends Error {
-  override name = "UnknownSchemaError";
-  /** The name that was requested. */
-  readonly schemaName: unknown;
-
-  constructor(schemaName: unknown) {
-    const known = [...new Set([...BUNDLED.values()].flatMap((names) => [...names.keys()]))].sort();
-    super(`unknown schema name ${describe(schemaName)}; expected one of ${known.join(", ")}`);
-    this.schemaName = schemaName;
-  }
-}
-
-/**
- * Thrown when a schema version is not bundled, or does not contain the requested schema.
- * Versions must be exact, such as `"0.8.0"`; `"0.8"` and `"latest"` are not bundled versions.
- */
-export class SchemaLookupError extends Error {
-  override name = "SchemaLookupError";
-  /** The schema name that was requested. */
-  readonly schemaName: string;
-  /** The schema version that was requested. */
-  readonly schemaVersion: unknown;
-
-  constructor(schemaName: string, schemaVersion: unknown, message: string) {
-    super(message);
-    this.schemaName = schemaName;
-    this.schemaVersion = schemaVersion;
-  }
-}
-
-function describe(value: unknown): string {
-  return typeof value === "string" ? JSON.stringify(value) : String(value);
-}
-
-function lookup(name: SchemaName, version: string | undefined): string {
-  const names = [...BUNDLED.values()];
-  if (typeof name !== "string" || !names.some((schemas) => schemas.has(name))) {
+function lookup(name: SchemaName, version: SchemaVersion | undefined): string {
+  if (typeof name !== "string" || !(SCHEMA_NAMES as readonly string[]).includes(name)) {
     throw new UnknownSchemaError(name);
   }
   const resolved: unknown = version === undefined ? SCHEMA_VERSION : version;
   const schemas = typeof resolved === "string" ? BUNDLED.get(resolved) : undefined;
   if (schemas === undefined) {
-    throw new SchemaLookupError(
-      name,
-      resolved,
-      `schema version ${describe(resolved)} is not bundled; available: ${[...BUNDLED.keys()].join(", ")}`,
-    );
+    throw unbundledVersion(name, resolved);
   }
   const text = schemas.get(name);
   if (text === undefined) {
-    throw new SchemaLookupError(name, resolved, `schema ${describe(name)} is not in schema version ${resolved}`);
+    throw missingFromVersion(name, resolved as string);
   }
   return text;
 }
 
 /** Return every bundled schema version, oldest first. */
-export function availableVersions(): string[] {
-  return [...BUNDLED.keys()];
+export function availableVersions(): SchemaVersion[] {
+  return [...SCHEMA_VERSIONS];
 }
 
 /**
@@ -125,7 +53,7 @@ export function availableVersions(): string[] {
  * @throws {UnknownSchemaError} `name` is not a schema in any bundled version.
  * @throws {SchemaLookupError} `version` is not bundled, or does not contain `name`.
  */
-export function getSchema(name: SchemaName, version?: string): Schema {
+export function getSchema(name: SchemaName, version?: SchemaVersion): Schema {
   return JSON.parse(lookup(name, version)) as Schema;
 }
 
@@ -138,6 +66,6 @@ export function getSchema(name: SchemaName, version?: string): Schema {
  * @throws {UnknownSchemaError} `name` is not a schema in any bundled version.
  * @throws {SchemaLookupError} `version` is not bundled, or does not contain `name`.
  */
-export function getSchemaJson(name: SchemaName, version?: string): string {
+export function getSchemaJson(name: SchemaName, version?: SchemaVersion): string {
   return lookup(name, version);
 }

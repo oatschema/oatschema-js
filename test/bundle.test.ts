@@ -7,7 +7,15 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { describe, test } from "node:test";
-import { availableVersions, getSchema, getSchemaJson, SCHEMA_NAMES, SCHEMA_VERSION, type SchemaName } from "oatschema";
+import {
+  availableVersions,
+  getSchema,
+  getSchemaJson,
+  SCHEMA_NAMES,
+  SCHEMA_VERSION,
+  type SchemaName,
+  type SchemaVersion,
+} from "oatschema";
 import { DEFAULT_OUTPUT, render } from "../scripts/generate.ts";
 import {
   checkSchema,
@@ -28,9 +36,9 @@ function bundledNames(version: string): string[] {
     .sort();
 }
 
-function allSchemas(): [string, SchemaName][] {
+function allSchemas(): [SchemaVersion, SchemaName][] {
   return availableVersions().flatMap((version) =>
-    bundledNames(version).map((name): [string, SchemaName] => [version, name as SchemaName]),
+    bundledNames(version).map((name): [SchemaVersion, SchemaName] => [version, name as SchemaName]),
   );
 }
 
@@ -116,7 +124,8 @@ describe("release tags", {
         assert.equal(released.status, 0);
         assert.deepEqual(readFileSync(join(SCHEMAS_DIR, version, file)), released.stdout, file);
         const name = file.slice(0, -".json".length) as SchemaName;
-        assert.deepEqual(Buffer.from(new TextEncoder().encode(getSchemaJson(name, version))), released.stdout, file);
+        const text = getSchemaJson(name, version as SchemaVersion);
+        assert.deepEqual(Buffer.from(new TextEncoder().encode(text)), released.stdout, file);
       }
     });
   }

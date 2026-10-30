@@ -1,0 +1,39 @@
+{
+  "producer": "invoice-extractor 2.1",
+  "vocabulary": [
+    "ITEM", "QUANTITY", "UNIT_PRICE", "ORG", "PERSON"
+  ],
+  "relation_vocabulary": [
+    "quantity_of", "price_of", "contact_for"
+  ],
+  "entities": [
+    { "id": "e1", "label": "ITEM",
+      "text": "Hinge, brass 75mm" },
+    { "id": "e2", "label": "QUANTITY",
+      "text": "4", "value": 4 },
+    { "id": "e3", "label": "UNIT_PRICE",
+      "text": "£12.50", "value": 12.5 },
+    { "id": "e4", "label": "ITEM",
+      "text": "Screw, M6 x 30" },
+    { "id": "e5", "label": "QUANTITY",
+      "text": "100", "value": 100 },
+    { "id": "e6", "label": "UNIT_PRICE",
+      "text": "£0.20", "value": 0.2 },
+    { "id": "e7", "label": "ORG",
+      "text": "Acme Fixings Ltd" },
+    { "id": "e8", "label": "PERSON",
+      "text": "Jane Doe" }
+  ],
+  "relations": [
+    { "label": "quantity_of", "subject_id": "e2",
+      "object_id": "e1", "score": 0.97 },
+    { "label": "price_of", "subject_id": "e3",
+      "object_id": "e1", "score": 0.95 },
+    { "label": "quantity_of", "subject_id": "e5",
+      "object_id": "e4", "score": 0.96 },
+    { "label": "price_of", "subject_id": "e6",
+      "object_id": "e4", "score": 0.91 },
+    { "label": "contact_for", "subject_id": "e8",
+      "object_id": "e7", "score": 0.82 }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "model": "gpt-4o",
+  "prompt": "Extract the invoice number, total amount, and due date from this document.",
+  "response_data": "{\"invoice_id\": \"INV-9528\", \"total_due\": 1450.75, \"due_date\": \"2025-10-31\"}",
+  "language": "eng",
+  "score": 0.95,
+  "score_explanation": "Extraction accuracy, from -1.0 (wrong) to 1.0 (correct).",
+  "generation_params": {
+    "system_prompt": "You are an expert financial document parser. You must only output a valid JSON object.",
+    "temperature": 0.0,
+    "max_tokens": 1000,
+    "response_format": {
+      "type": "json_object"
+    }
+  },
+  "generation_metadata": {
+    "response_id": "chatcmpl-9qA8ZypD4YcW1bF5c6e7g8H9iJkLmN",
+    "created": "2025-09-17T11:45:00Z",
+    "finish_reason": "stop",
+    "system_fingerprint": "fp_a24b9d3f8e",
+    "usage": {
+      "prompt_tokens": 820,
+      "completion_tokens": 45,
+      "total_tokens": 865
+    }
+  }
+}

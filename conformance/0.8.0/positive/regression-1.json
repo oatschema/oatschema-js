@@ -1,0 +1,43 @@
+{
+  "target": "temperature",
+  "unit": "celsius",
+  "producer": "WeatherForecaster-v2.1",
+  "score_explanation": "Probability of observation falling within the interval.",
+  "attributes": {
+    "region": "London, UK",
+    "model_version": 2.1,
+    "deployment_id": "dep_88a9s8d"
+  },
+  "points": [
+    {
+      "value": 15.5,
+      "timestamp": "2025-10-12T12:00:00Z",
+      "statistic": "mean",
+      "interval_lower": 14.8,
+      "interval_upper": 16.2,
+      "score": 0.98
+    },
+    {
+      "value": 18.2,
+      "timestamp": "2025-10-12T12:00:00Z",
+      "statistic": "max",
+      "attributes": {
+        "description": "Peak heat spike",
+        "is_anomaly": true
+      }
+    },
+    {
+      "value": null,
+      "timestamp": "2025-10-12T13:00:00Z",
+      "attributes": {
+        "status": "sensor_offline"
+      }
+    },
+    {
+      "value": 14.0,
+      "timestamp": "2025-10-12T14:00:00Z",
+      "quantile_level": 0.5,
+      "statistic": "quantile"
+    }
+  ]
+}

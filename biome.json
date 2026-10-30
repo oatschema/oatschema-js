@@ -6,7 +6,7 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["**", "!schemas", "!src/bundled.ts"]
+    "includes": ["**", "!schemas", "!conformance", "!src/bundled.ts"]
   },
   "formatter": {
     "indentStyle": "space",

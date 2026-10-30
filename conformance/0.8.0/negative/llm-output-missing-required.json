@@ -1,0 +1,7 @@
+{
+  "prompt": "What is the capital of France?",
+  "response_data": "The capital of France is Paris.",
+  "generation_params": {
+    "temperature": 0.7
+  }
+}
