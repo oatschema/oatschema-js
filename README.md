@@ -123,10 +123,14 @@ The validators are compiled from the schemas with [Ajv](https://ajv.js.org), but
 
 Known differences from oatschema-py:
 
-- **One changes a verdict:** JavaScript numbers hold integers exactly only up to 2^53. `JSON.parse` rounds larger ones, so two different large integers in a `uniqueItems` list (such as `embedding`'s sparse `indices` or `document-extraction`'s page lists) can become equal and fail here while oatschema-py accepts them. Keep such integers below 9007199254740992.
+Two change a verdict, and both come from parsing. The validators check the value that `JSON.parse` returns, not the JSON text, so they never see the original digits. A JavaScript number holds integers exactly only up to 2^53, and no number from about 1.8 × 10^308 upward. oatschema-py keeps every integer exact. Keep integers within ±9,007,199,254,740,991 (`Number.MAX_SAFE_INTEGER`) and neither difference can occur.
+
+- **Large integers in a list of unique values:** `JSON.parse` can round integers above 2^53, so two different ones can become equal. In a `uniqueItems` list the record then fails here, while oatschema-py accepts it. In OATS 0.8.0 these lists are `embedding`'s sparse `indices` and the `pages` lists in `document-extraction`'s `page_width` and `page_height`.
+- **Integers too large for a JavaScript number:** `JSON.parse` turns an integer of about 1.8 × 10^308 or more, written without a fraction or exponent, into `Infinity`, or a negative one into `-Infinity`. Neither passes `type: integer` or `type: number`, so the record fails here. oatschema-py accepts it wherever the schema sets no limit. In OATS 0.8.0 that's every integer field (none has a `maximum`), such as `ranking`'s `rank` and `embedding`'s `indices` and `dimensions`, and every number field with no `maximum`, such as box coordinates, durations, times, and numbers in `attributes` and `generic` data. Both reject the value where a `maximum` (or, for a negative value, a `minimum`) applies, or when it's written with a fraction or an exponent, such as `1e400`.
 
 These don't change a verdict:
 
+- An integer above 2^53 that passes may reach your code rounded: `JSON.parse("9007199254740993")` gives `9007199254740992`. oatschema-py keeps the digits. An integer for which `Number.isSafeInteger(value)` is false may not be the one in the text; if you need the exact digits, read them from the JSON text with a parser that keeps them.
 - Property names in messages are shortened to 100 characters. oatschema-py quotes them in full, within its 1,000-character limit.
 - When a record has several errors, the two packages may list them in a different order, so `validate` can report a different one of them.
 - Records must be JSON values. Values JSON can't hold, such as `undefined`, `NaN`, functions, class instances and cyclic objects, give no particular result.
