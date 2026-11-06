@@ -1,0 +1,16 @@
+{
+  "extraction_type": "boxes",
+  "unit": "normalized",
+  "blocks": [
+    {
+      "block_type": "box",
+      "text": "Header",
+      "box": {
+        "x": 0.1,
+        "y": 0.1,
+        "width": 500,
+        "height": 0.2
+      }
+    }
+  ]
+}

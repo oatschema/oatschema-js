@@ -81,9 +81,18 @@ export function isDateTime(value: string): boolean {
  * Return whether `value` is an absolute RFC 3986 URI, as JSON Schema's `uri` format requires.
  *
  * Only ASCII is accepted, so an IRI or a URI with an unencoded space is not a `uri`. An empty path, as in `x:`, is.
+ * A value too long for the JavaScript engine's regular expression stack, millions of characters, is not accepted;
+ * the OATS schemas limit their URIs to far fewer.
  */
 export function isUri(value: string): boolean {
-  return URI.test(value);
+  try {
+    return URI.test(value);
+  } catch (error) {
+    if (error instanceof RangeError) {
+      return false;
+    }
+    throw error;
+  }
 }
 
 /** @internal */

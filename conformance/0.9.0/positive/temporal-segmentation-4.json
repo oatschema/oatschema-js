@@ -1,0 +1,29 @@
+{
+  "producer": "ActionFormer",
+  "vocabulary_url": "https://github.com/activitynet/ActivityNet/blob/master/Evaluation/data/activity_net.v1-3.min.json",
+  "score_explanation": "Detection confidence for the action class over the interval.",
+  "segments": [
+    {
+      "label": "Long jump",
+      "start_time": 12.34,
+      "end_time": 27.91,
+      "score": 0.842
+    },
+    {
+      "label": "Triple jump",
+      "start_time": 11.02,
+      "end_time": 29.4,
+      "score": 0.311
+    },
+    {
+      "label": "Long jump",
+      "start_time": 61.75,
+      "end_time": 74.08,
+      "score": 0.127
+    }
+  ],
+  "attributes": {
+    "source_format": "ActivityNet v1.3 results",
+    "video_id": "v_8onOVVuN_Is"
+  }
+}

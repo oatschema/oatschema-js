@@ -1,0 +1,9 @@
+{
+  "entities": [
+    {
+      "label": "ORG",
+      "text": "Example Ltd",
+      "score": 95
+    }
+  ]
+}

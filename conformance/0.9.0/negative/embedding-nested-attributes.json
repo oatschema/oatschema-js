@@ -1,0 +1,10 @@
+{
+  "vector": [0.1, 0.2, 0.3],
+  "attributes": {
+    "version": 1,
+    "source_model": {
+      "name": "bert-base",
+      "framework": "pytorch"
+    }
+  }
+}

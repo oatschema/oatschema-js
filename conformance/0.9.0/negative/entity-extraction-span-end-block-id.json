@@ -1,0 +1,16 @@
+{
+  "entities": [
+    {
+      "label": "FEE_CAP",
+      "location": [
+        {
+          "type": "span",
+          "block_id": "p3-l12",
+          "start": 6,
+          "end_block_id": "p3-l13",
+          "end": 9
+        }
+      ]
+    }
+  ]
+}

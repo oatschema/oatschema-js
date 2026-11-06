@@ -1,0 +1,14 @@
+{
+  "vocabulary": [
+    "scene",
+    "chapter",
+    "scene"
+  ],
+  "segments": [
+    {
+      "label": "scene",
+      "start_time": 0,
+      "end_time": 12.5
+    }
+  ]
+}

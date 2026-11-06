@@ -1,0 +1,6 @@
+{
+  "producer": "bge-reranker-v2-m3",
+  "results": [
+    { "rank": 1, "title": "Ridgeline GTX", "score": 0.98 }
+  ]
+}

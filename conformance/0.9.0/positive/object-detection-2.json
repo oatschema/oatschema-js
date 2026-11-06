@@ -1,0 +1,31 @@
+{
+  "unit": "per_mille",
+  "producer": "Manual Review",
+  "score_explanation": "Reviewer confidence, where 1.0 is certain.",
+  "vocabulary_url": "https://example.com/vocab/vehicles",
+  "objects": [
+    {
+      "id": "obj_1",
+      "label": "car",
+      "score": 1.0,
+      "multi_polygon": [
+        [
+          { "x": 100, "y": 400 },
+          { "x": 300, "y": 400 },
+          { "x": 300, "y": 600 }
+        ],
+        [
+          { "x": 350, "y": 420 },
+          { "x": 450, "y": 420 },
+          { "x": 450, "y": 600 }
+        ]
+      ]
+    },
+    {
+      "id": "obj_2",
+      "parent_id": "obj_1",
+      "label": "wheel",
+      "box": { "x": 120, "y": 540, "width": 60, "height": 60 }
+    }
+  ]
+}

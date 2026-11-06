@@ -1,0 +1,65 @@
+{
+  "vocabulary_url": "https://example.com/tax-taxonomy/v1",
+  "vocabulary": ["ORG", "DATE", "MONEY", "PERSON"],
+  "unit": "normalized",
+  "entities": [
+    {
+      "id": "ent_001",
+      "text": "Acme Corp",
+      "label": "ORG",
+      "score": 0.98,
+      "location": [
+        {
+          "type": "block",
+          "block_type": "box",
+          "page_number": 1,
+          "box": {
+            "x": 0.1,
+            "y": 0.1,
+            "width": 0.3,
+            "height": 0.05
+          }
+        }
+      ]
+    },
+    {
+      "id": "ent_002",
+      "text": "$1,250.00",
+      "label": "MONEY",
+      "concept": "TotalAmount",
+      "definition": "The final sum payable after taxes.",
+      "value": 1250.00,
+      "score": 0.99,
+      "attributes": {
+        "currency": "USD",
+        "is_estimated": false
+      },
+      "location": [
+        {
+          "type": "block_ref",
+          "block_id": "block_8f9e2d1c-4b5a"
+        }
+      ]
+    },
+    {
+      "id": "ent_003",
+      "text": "Jane Doe",
+      "label": "PERSON",
+      "concept": "Recipient",
+      "value": "DOE, JANE",
+      "location": [
+        {
+          "type": "block",
+          "block_type": "polygon",
+          "page_number": 1,
+          "polygon": [
+            { "x": 0.1, "y": 0.2 },
+            { "x": 0.15, "y": 0.2 },
+            { "x": 0.15, "y": 0.22 },
+            { "x": 0.1, "y": 0.22 }
+          ]
+        }
+      ]
+    }
+  ]
+}

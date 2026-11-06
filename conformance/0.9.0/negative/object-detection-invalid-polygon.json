@@ -1,0 +1,12 @@
+{
+  "unit": "px",
+  "objects": [
+    {
+      "label": "incomplete_shape",
+      "polygon": [
+        { "x": 10, "y": 10 },
+        { "x": 20, "y": 20 }
+      ]
+    }
+  ]
+}

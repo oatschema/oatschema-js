@@ -15,10 +15,14 @@ import { sha256 } from "../scripts/sync-schemas.ts";
 const OATS_REPO = process.env.OATS_REPO || join(homedir(), "projects", "oats");
 
 interface FormatCorpus {
-  version: SchemaVersion;
   engine: string;
   records: { [format: string]: { schema: SchemaName; record: unknown; path: (string | number)[] } };
   cases: { format: string; value: string; valid: boolean }[];
+}
+
+interface LiteralCorpus {
+  version: SchemaVersion;
+  cases: { id: string; schema: SchemaName; pointer: string; label: string; text: string; valid: boolean }[];
 }
 
 function corpus(version: string): Cases {
@@ -104,6 +108,34 @@ describe("oatschema/validate agrees with the corpus", () => {
   }
 });
 
+describe("oatschema/validate agrees with the literal cases", () => {
+  for (const version of availableVersions().filter((version) => version !== "0.8.0")) {
+    const literals = JSON.parse(readFileSync(join(DEFAULT_CORPUS, version, "literals.json"), "utf8")) as LiteralCorpus;
+
+    test(`${version} covers both verdicts`, () => {
+      assert.equal(literals.version, version);
+      assert.equal(new Set(literals.cases.map((item) => item.id)).size, literals.cases.length);
+      assert.ok(literals.cases.some((item) => item.valid));
+      assert.ok(literals.cases.some((item) => !item.valid));
+    });
+
+    for (const item of literals.cases) {
+      test(`${version} ${item.id} is ${item.valid ? "valid" : "invalid"}`, () => {
+        const record = JSON.parse(item.text);
+        assert.equal(getValidator(item.schema, version).isValid(record), item.valid);
+        assert.equal(getValidator(item.schema, version, { checkFormats: false }).isValid(record), item.valid);
+        const errors = [...iterErrors(record, item.schema, version)];
+        assert.equal(errors.length === 0, item.valid);
+        const target = `${item.pointer}/`;
+        for (const error of errors) {
+          const found = `${pointer(error)}/`;
+          assert.ok(target.startsWith(found) || found.startsWith(target), error.message);
+        }
+      });
+    }
+  }
+});
+
 describe("format checks agree with jsonschema-rs", () => {
   const data = JSON.parse(readFileSync(join(DEFAULT_CORPUS, "formats.json"), "utf8")) as FormatCorpus;
 
@@ -116,20 +148,22 @@ describe("format checks agree with jsonschema-rs", () => {
     }
   });
 
-  for (const item of data.cases) {
-    test(`${item.format} ${JSON.stringify(item.value)} is ${item.valid ? "valid" : "invalid"}`, () => {
-      const template = data.records[item.format];
-      assert.ok(template !== undefined);
-      const record = embed(template, item.value);
-      assert.equal(getValidator(template.schema, data.version).isValid(record), item.valid);
-      assert.equal(getValidator(template.schema, data.version, { checkFormats: false }).isValid(record), true);
-      if (!item.valid) {
-        const [error] = iterErrors(record, template.schema, data.version);
-        assert.equal(error?.keyword, "format");
-        assert.deepEqual(error?.path, template.path);
-        assert.equal(error?.reason, `… is not a "${item.format}"`);
-      }
-    });
+  for (const version of availableVersions()) {
+    for (const item of data.cases) {
+      test(`${version} ${item.format} ${JSON.stringify(item.value)} is ${item.valid ? "valid" : "invalid"}`, () => {
+        const template = data.records[item.format];
+        assert.ok(template !== undefined);
+        const record = embed(template, item.value);
+        assert.equal(getValidator(template.schema, version).isValid(record), item.valid);
+        assert.equal(getValidator(template.schema, version, { checkFormats: false }).isValid(record), true);
+        if (!item.valid) {
+          const [error] = iterErrors(record, template.schema, version);
+          assert.equal(error?.keyword, "format");
+          assert.deepEqual(error?.path, template.path);
+          assert.equal(error?.reason, `… is not a "${item.format}"`);
+        }
+      });
+    }
   }
 });
 

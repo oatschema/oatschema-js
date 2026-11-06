@@ -1,0 +1,9 @@
+{
+  "target": "cpu_usage",
+  "points": [
+    {
+      "timestamp": "2025-01-01T00:00:00Z",
+      "score": 0.99
+    }
+  ]
+}

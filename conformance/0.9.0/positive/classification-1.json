@@ -1,0 +1,24 @@
+{
+  "score_explanation": "Model confidence probability, where 1.0 is 100% confident.",
+  "vocabulary": [
+      "animal",
+      "cat",
+      "dog",
+      "house",
+      "vehicle"
+  ],
+  "labels": [
+    {
+      "label": "animal",
+      "score": 0.98
+    },
+    {
+      "label": "cat",
+      "score": 0.95
+    },
+    {
+      "label": "house",
+      "score": 0.75
+    }
+  ]
+}

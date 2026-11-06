@@ -1,0 +1,7 @@
+{
+  "model": "sparse-v1",
+  "vector": {
+    "indices": [1, 2],
+    "values": [0.5, 0.9]
+  }
+}

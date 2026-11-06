@@ -66,7 +66,7 @@ test("expectedId includes the version", () => {
 });
 
 describe("checkName", () => {
-  for (const name of ["docs", "latest", "changelog", "3d-detection", "Generic", "llm_output", "a--b", "-a"]) {
+  for (const name of ["docs", "latest", "changelog", "tools", "3d-detection", "Generic", "llm_output", "a--b", "-a"]) {
     test(`rejects ${name}`, () => {
       assert.throws(() => checkName(name), SyncError);
     });

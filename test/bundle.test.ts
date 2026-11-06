@@ -27,7 +27,7 @@ import {
 } from "../scripts/sync-schemas.ts";
 
 const OATS_REPO = process.env.OATS_REPO || join(homedir(), "projects", "oats");
-const RESERVED_NAMES = new Set(["changelog", "docs", "latest"]);
+const RESERVED_NAMES = new Set(["changelog", "docs", "latest", "tools"]);
 
 function bundledNames(version: string): string[] {
   return readdirSync(join(SCHEMAS_DIR, version))
@@ -42,7 +42,86 @@ function allSchemas(): [SchemaVersion, SchemaName][] {
   );
 }
 
+function numericSubschemas(node: unknown): { [key: string]: unknown }[] {
+  if (typeof node !== "object" || node === null) {
+    return [];
+  }
+  const found = Object.values(node).flatMap(numericSubschemas);
+  const type = (node as { type?: unknown }).type;
+  const types = Array.isArray(type) ? type : [type];
+  return types.includes("number") || types.includes("integer") ? [node as { [key: string]: unknown }, ...found] : found;
+}
+
+function uriSubschemas(node: unknown): { maxLength?: number }[] {
+  if (typeof node !== "object" || node === null) {
+    return [];
+  }
+  const found = Object.values(node).flatMap(uriSubschemas);
+  return (node as { format?: unknown }).format === "uri" ? [node as { maxLength?: number }, ...found] : found;
+}
+
+type Subschema = { [key: string]: unknown };
+
+function recordDepth(schema: Subschema, root: Subschema, references: readonly string[] = []): number {
+  let depth = 0;
+  const visit = (child: unknown, levels: number): void => {
+    if (typeof child === "object" && child !== null) {
+      depth = Math.max(depth, levels + recordDepth(child as Subschema, root, references));
+    }
+  };
+  if (typeof schema.$ref === "string") {
+    assert.ok(!references.includes(schema.$ref), `${schema.$ref} is recursive`);
+    assert.match(schema.$ref, /^#\/\$defs\//);
+    const target = (root.$defs as Subschema)[schema.$ref.slice("#/$defs/".length)] as Subschema;
+    depth = Math.max(depth, recordDepth(target, root, [...references, schema.$ref]));
+  }
+  for (const key of ["properties", "patternProperties"]) {
+    for (const child of Object.values((schema[key] ?? {}) as Subschema)) {
+      visit(child, 1);
+    }
+  }
+  for (const key of ["items", "additionalProperties", "contains", "unevaluatedProperties", "unevaluatedItems"]) {
+    visit(schema[key], 1);
+  }
+  for (const child of (schema.prefixItems ?? []) as unknown[]) {
+    visit(child, 1);
+  }
+  for (const key of ["anyOf", "oneOf", "allOf"]) {
+    for (const child of (schema[key] ?? []) as unknown[]) {
+      visit(child, 0);
+    }
+  }
+  for (const key of ["if", "then", "else"]) {
+    visit(schema[key], 0);
+  }
+  return depth;
+}
+
 describe("bundled files", () => {
+  for (const [version, name] of allSchemas()) {
+    test(`${version}/${name} stays within the validators' limits`, () => {
+      const schema = getSchema(name, version) as Subschema;
+      assert.ok(recordDepth(schema, schema) <= 32);
+      for (const subschema of uriSubschemas(schema)) {
+        assert.ok(typeof subschema.maxLength === "number" && subschema.maxLength <= 65536);
+      }
+    });
+  }
+
+  for (const version of availableVersions().filter((version) => version !== "0.8.0")) {
+    test(`every number in ${version} has both bounds, within the safe integer range`, () => {
+      for (const name of bundledNames(version)) {
+        const subschemas = numericSubschemas(getSchema(name as SchemaName, version as SchemaVersion));
+        for (const subschema of subschemas) {
+          const lower = subschema.minimum ?? subschema.exclusiveMinimum;
+          const upper = subschema.maximum ?? subschema.exclusiveMaximum;
+          assert.ok(typeof lower === "number" && lower >= Number.MIN_SAFE_INTEGER, `${name}: ${String(lower)}`);
+          assert.ok(typeof upper === "number" && upper <= Number.MAX_SAFE_INTEGER, `${name}: ${String(upper)}`);
+        }
+      }
+    });
+  }
+
   test("availableVersions matches the bundled directories", () => {
     const directories = readdirSync(SCHEMAS_DIR, { withFileTypes: true })
       .filter((entry) => entry.isDirectory())

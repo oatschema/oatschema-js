@@ -1,0 +1,9 @@
+{
+  "model": "gpt-4o",
+  "prompt": "Extract the invoice number.",
+  "response_data": {
+    "invoice_id": "INV-9528",
+    "total_due": 1450.75
+  },
+  "language": "eng"
+}
