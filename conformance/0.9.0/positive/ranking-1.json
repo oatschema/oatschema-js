@@ -1,0 +1,23 @@
+{
+  "target": "near-duplicate",
+  "producer": "imagehash 4.3 (pHash)",
+  "score_explanation": "1 - (Hamming distance / 64).",
+  "results": [
+    {
+      "rank": 1,
+      "id": "photos/2024/IMG_0412.jpg",
+      "score": 0.969,
+      "attributes": {
+        "hamming_distance": 2
+      }
+    },
+    {
+      "rank": 2,
+      "id": "photos/2024/IMG_0415.jpg",
+      "score": 0.859,
+      "attributes": {
+        "hamming_distance": 9
+      }
+    }
+  ]
+}

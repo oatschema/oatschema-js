@@ -34,9 +34,9 @@ export const SCHEMA_NAMES: readonly [
 export type SchemaName = (typeof SCHEMA_NAMES)[number];
 
 /** Every bundled schema version, oldest first. */
-export const SCHEMA_VERSIONS: readonly ["0.8.0"] = Object.freeze(["0.8.0"] as const);
+export const SCHEMA_VERSIONS: readonly ["0.8.0", "0.9.0"] = Object.freeze(["0.8.0", "0.9.0"] as const);
 
-/** A bundled OATS schema version, such as `"0.8.0"`. */
+/** A bundled OATS schema version, such as `"0.9.0"`. */
 export type SchemaVersion = (typeof SCHEMA_VERSIONS)[number];
 
 /**
@@ -44,7 +44,7 @@ export type SchemaVersion = (typeof SCHEMA_VERSIONS)[number];
  *
  * A schema's own version is in its `x-version` keyword.
  */
-export const SCHEMA_VERSION: SchemaVersion = "0.8.0";
+export const SCHEMA_VERSION: SchemaVersion = "0.9.0";
 
 /**
  * Return whether `value` is a bundled schema version, narrowing it to {@link SchemaVersion}.

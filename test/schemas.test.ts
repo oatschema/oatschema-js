@@ -18,16 +18,17 @@ import {
 describe("constants", () => {
   test("SCHEMA_VERSION is the newest bundled version", () => {
     assert.equal(SCHEMA_VERSION, availableVersions().at(-1));
+    assert.equal(SCHEMA_VERSION, "0.9.0");
   });
 
   test("availableVersions lists every bundled version oldest first", () => {
-    assert.deepEqual(availableVersions(), ["0.8.0"]);
+    assert.deepEqual(availableVersions(), ["0.8.0", "0.9.0"]);
   });
 
   test("availableVersions returns a new array", () => {
     const versions = availableVersions();
     versions.pop();
-    assert.deepEqual(availableVersions(), ["0.8.0"]);
+    assert.deepEqual(availableVersions(), ["0.8.0", "0.9.0"]);
   });
 
   test("constants cannot be modified", () => {
@@ -124,7 +125,7 @@ describe("getSchema", () => {
     assert.equal(caught.name, "SchemaLookupError");
     assert.equal(caught.schemaName, "classification");
     assert.equal(caught.schemaVersion, "0.8");
-    assert.ok(caught.message.endsWith("available: 0.8.0"));
+    assert.ok(caught.message.endsWith("available: 0.8.0, 0.9.0"));
   });
 });
 

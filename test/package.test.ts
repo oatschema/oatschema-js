@@ -10,10 +10,7 @@ import { fileURLToPath } from "node:url";
 
 const PROJECT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const pkg = JSON.parse(readFileSync(join(PROJECT, "package.json"), "utf8"));
-const NAMES = JSON.parse(readFileSync(join(PROJECT, "schemas", "0.8.0", "MANIFEST.json"), "utf8")).files as Record<
-  string,
-  string
->;
+const VERSIONS = readdirSync(join(PROJECT, "schemas"));
 
 function walk(directory: string): string[] {
   return readdirSync(directory).flatMap((entry) => {
@@ -29,7 +26,11 @@ test("npm pack includes exactly the intended files", () => {
     encoding: "utf8",
   });
   const [packed] = JSON.parse(output) as [{ files: { path: string }[] }];
-  const names = Object.keys(NAMES).map((file) => file.slice(0, -".json".length));
+  const namesIn = (version: string): string[] =>
+    Object.keys(
+      JSON.parse(readFileSync(join(PROJECT, "schemas", version, "MANIFEST.json"), "utf8")).files as object,
+    ).map((file) => file.slice(0, -".json".length));
+  const names = [...new Set(VERSIONS.flatMap(namesIn))];
   const modules = ["ajv", "bundled", "errors", "formats", "index", "names", "validate", "validation"];
   assert.deepEqual(
     packed.files.map((file) => file.path).sort(),
@@ -42,7 +43,7 @@ test("npm pack includes exactly the intended files", () => {
       "package.json",
       "dist/compiled/index.js",
       ...modules.flatMap((module) => [`dist/${module}.d.ts`, `dist/${module}.js`]),
-      ...names.map((name) => `dist/compiled/0.8.0/${name}.js`),
+      ...VERSIONS.flatMap((version) => namesIn(version).map((name) => `dist/compiled/${version}/${name}.js`)),
       ...names.flatMap((name) => [`dist/validate/${name}.d.ts`, `dist/validate/${name}.js`]),
     ].sort(),
   );
@@ -112,6 +113,27 @@ test("the third-party notices carry Ajv's licence", () => {
   const ajvLicense = readFileSync(join(PROJECT, "node_modules", "ajv", "LICENSE"), "utf8");
   assert.ok(notices.includes(ajvLicense.trim()));
   assert.ok(notices.includes(`ajv ${pkg.devDependencies.ajv}`));
+});
+
+test("the changelog's newest entry is this version, with a date", () => {
+  const changelog = readFileSync(join(PROJECT, "CHANGELOG.md"), "utf8");
+  const [, version] = /^## (\d+\.\d+\.\d+) \(\d{4}-\d{2}-\d{2}\)$/m.exec(changelog) ?? [];
+  assert.equal(version, pkg.version);
+});
+
+test("only the listed files in the repository name the company", () => {
+  const files = execFileSync("git", ["ls-files", "--cached", "--others", "--exclude-standard"], {
+    cwd: PROJECT,
+    encoding: "utf8",
+  })
+    .split("\n")
+    .filter((file) => file !== "" && !file.startsWith("dist/") && statSync(join(PROJECT, file)).isFile());
+  assert.ok(files.includes("src/index.ts"));
+  assert.deepEqual(files.filter((file) => /dorsal/i.test(readFileSync(join(PROJECT, file), "latin1"))).sort(), [
+    "AUTHORS",
+    "conformance/0.8.0/negative/entity-extraction-score-out-of-range.json",
+    "test/package.test.ts",
+  ]);
 });
 
 test("every source file starts with the SPDX header", () => {

@@ -1,0 +1,49 @@
+{
+  "producer": "spaCy en_core_web_trf",
+  "vocabulary": ["ORG", "DATE", "PERSON"],
+  "unit": "px",
+  "entities": [
+    {
+      "id": "ent_101",
+      "text": "Acme Corp",
+      "label": "ORG",
+      "score": 0.97,
+      "location": [
+        { "type": "span", "start": 0, "end": 9 }
+      ]
+    },
+    {
+      "id": "ent_102",
+      "text": "21 November 2025",
+      "label": "DATE",
+      "value": "2025-11-21",
+      "location": [
+        { "type": "span", "start": 14, "end": 30, "block_id": "block_0002" }
+      ]
+    },
+    {
+      "id": "ent_103",
+      "label": "SIGNATURE",
+      "location": [
+        {
+          "type": "block",
+          "block_type": "multi_polygon",
+          "page_number": 2,
+          "multi_polygon": [
+            [
+              { "x": 410, "y": 720 },
+              { "x": 470, "y": 720 },
+              { "x": 470, "y": 760 }
+            ],
+            [
+              { "x": 480, "y": 722 },
+              { "x": 540, "y": 722 },
+              { "x": 540, "y": 758 },
+              { "x": 480, "y": 758 }
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}

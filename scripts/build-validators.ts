@@ -29,6 +29,8 @@ const FORBIDDEN: readonly [RegExp, string][] = [
   [/\bimport\s*\.\s*meta\b/, "import.meta"],
 ];
 
+const UNIQUE_ITEMS_INDEX = /\bconst (indices\d*) = \{\};/g;
+
 /** A generated validator that would not run as plain browser ESM. */
 export class BuildError extends Error {
   override name = "BuildError";
@@ -79,7 +81,7 @@ export function compileSchema(schemaText: string): string {
   ucs2length.default.code = "oatsUcs2length";
   try {
     const validate = ajv.compile(JSON.parse(schemaText));
-    return standaloneCode.default(ajv, validate);
+    return standaloneCode.default(ajv, validate).replace(UNIQUE_ITEMS_INDEX, "const $1 = Object.create(null);");
   } finally {
     ucs2length.default.code = previous;
   }

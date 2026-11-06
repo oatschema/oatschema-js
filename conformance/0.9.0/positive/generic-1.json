@@ -1,0 +1,10 @@
+{
+    "description": "Output from image quality analysis script v1.2",
+    "data": {
+        "is_blurry": false,
+        "contrast_score": 0.87,
+        "dominant_color_hex": "#1a4e8a",
+        "resolution_width": 1920,
+        "primary_subject": null
+    }
+}

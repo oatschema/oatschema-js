@@ -1,0 +1,9 @@
+{
+  "extraction_type": "text",
+  "blocks": [
+    {
+      "block_type": "circle",
+      "text": "This isn't supported."
+    }
+  ]
+}

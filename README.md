@@ -25,12 +25,12 @@ import { getSchema, SCHEMA_VERSION } from "oatschema";
 import { validate, isValid } from "oatschema/validate";
 
 const schema = getSchema("classification"); // a fresh plain object, safe to modify
-schema.$id; // "https://oatschema.org/0.8.0/classification"
-SCHEMA_VERSION; // "0.8.0", used when you don't pass a version
+schema.$id; // "https://oatschema.org/0.9.0/classification"
+SCHEMA_VERSION; // "0.9.0", used when you don't pass a version
 
 isValid({ labels: [{ label: "cat", score: 0.92 }] }, "classification"); // true
 validate({ labels: [{ label: "cat", score: 1.5 }] }, "classification");
-// throws ValidationError: classification 0.8.0 at /labels/0/score: … is greater than the maximum of 1
+// throws ValidationError: classification 0.9.0 at /labels/0/score: … is greater than the maximum of 1
 ```
 
 ## Schemas
@@ -67,10 +67,10 @@ if (!isValid(record, "classification")) {
 }
 
 try {
-  validate(record, "classification", "0.8.0");
+  validate(record, "classification", "0.9.0");
 } catch (error) {
   if (error instanceof ValidationError) {
-    console.log(error.message); // classification 0.8.0 at /labels/0/score: … is greater than the maximum of 1
+    console.log(error.message); // classification 0.9.0 at /labels/0/score: … is greater than the maximum of 1
   }
 }
 
@@ -86,7 +86,7 @@ validator.isValid(record);
 
 | Property | Holds |
 | :--- | :--- |
-| `message` | `classification 0.8.0 at /labels/0/score: … is greater than the maximum of 1` |
+| `message` | `classification 0.9.0 at /labels/0/score: … is greater than the maximum of 1` |
 | `reason` | `… is greater than the maximum of 1` |
 | `path` | `["labels", 0, "score"]`: where in the record, with array indices as numbers |
 | `keyword` | `"maximum"`: the JSON Schema keyword that rejected the value |
@@ -95,12 +95,12 @@ validator.isValid(record);
 
 ### One schema only
 
-`oatschema/validate` loads the validators for every schema (about 56 KB gzipped). A page that checks one schema can load just that one, plus about 7 KB of shared code:
+`oatschema/validate` loads the validators for every schema in every bundled version (about 109 KB gzipped). A page that checks one schema can load just that schema's validators, one per bundled version, plus about 8 KB of shared code:
 
 ```ts
 import { getValidator } from "oatschema/validate/document-extraction";
 
-const validator = getValidator(); // or getValidator("0.8.0", { checkFormats: false })
+const validator = getValidator(); // or getValidator("0.9.0", { checkFormats: false })
 validator.validate(record);
 ```
 
@@ -117,23 +117,26 @@ Every module in `dist/` imports only other files in `dist/` by relative path, an
 
 ### Same verdicts as oatschema-py
 
-The validators are compiled from the schemas with [Ajv](https://ajv.js.org), but no Ajv code or type is part of the API. The repository's `conformance/` directory holds every example from each bundled OATS release, with its expected verdict, plus format edge cases checked against the jsonschema-rs version oatschema-py uses. The tests check every case here, and a script checks the same cases against oatschema-py. They agree on all of them, with format checks on and off.
+The validators are compiled from the schemas with [Ajv](https://ajv.js.org), but no Ajv code or type is part of the API. The repository's `conformance/` directory holds every example from each bundled OATS release, with its expected verdict, plus format edge cases. The tests check every case here, and a script checks the same cases against oatschema-py. They agree on all of them, with format checks on and off.
 
-`date-time` follows RFC 3339 strictly (a `T` separator, an offset with a colon, real dates, and leap seconds only at 23:59:60 UTC), and `uri` accepts any absolute RFC 3986 URI, including `x:`. Both match jsonschema-rs on every case in `conformance/formats.json`.
+`date-time` follows RFC 3339 strictly (a `T` separator, an offset with a colon, real dates, and leap seconds only at 23:59:60 UTC), and `uri` accepts any absolute RFC 3986 URI, including `x:`. Both match oatschema-py on every case in `conformance/formats.json`.
 
-Known differences from oatschema-py:
+**Unpaired surrogates are invalid at every version.** RFC 7493 forbids them, so `validate`, `isValid` and `iterErrors` treat a string or property name holding half a surrogate pair, such as `"\ud800"`, as invalid, even with `{ checkFormats: false }`, as oatschema-py does. The check is in this package, not the schemas, so it applies in `oatschema/validate` and not to your own Ajv. Every record is scanned first, which adds about 1 µs to a small record, about 7 µs to a 1,536-float embedding and about 0.1 to 0.25 s to a 64 MB record, depending on its shape. The error's `path` locates it, and its `keyword` and `schemaPath` are empty. For such a record, `iterErrors` reports only the surrogates.
 
-Two change a verdict, and both come from parsing. The validators check the value that `JSON.parse` returns, not the JSON text, so they never see the original digits. A JavaScript number holds integers exactly only up to 2^53, and no number from about 1.8 × 10^308 upward. oatschema-py keeps every integer exact. Keep integers within ±9,007,199,254,740,991 (`Number.MAX_SAFE_INTEGER`) and neither difference can occur.
+**From OATS 0.9.0, large numbers get the same verdict in both packages.** Every number in a 0.9.0 schema must lie within ±9,007,199,254,740,991 (`Number.MAX_SAFE_INTEGER`), and both packages reject any integer outside it, and any other number that is still outside it once read as a double. A JavaScript number holds every integer in that range exactly. `conformance/0.9.0/literals.json` checks this on 163 records, with the values written out in the JSON text.
 
-- **Large integers in a list of unique values:** `JSON.parse` can round integers above 2^53, so two different ones can become equal. In a `uniqueItems` list the record then fails here, while oatschema-py accepts it. In OATS 0.8.0 these lists are `embedding`'s sparse `indices` and the `pages` lists in `document-extraction`'s `page_width` and `page_height`.
-- **Integers too large for a JavaScript number:** `JSON.parse` turns an integer of about 1.8 × 10^308 or more, written without a fraction or exponent, into `Infinity`, or a negative one into `-Infinity`. Neither passes `type: integer` or `type: number`, so the record fails here. oatschema-py accepts it wherever the schema sets no limit. In OATS 0.8.0 that's every integer field (none has a `maximum`), such as `ranking`'s `rank` and `embedding`'s `indices` and `dimensions`, and every number field with no `maximum`, such as box coordinates, durations, times, and numbers in `attributes` and `generic` data. Both reject the value where a `maximum` (or, for a negative value, a `minimum`) applies, or when it's written with a fraction or an exponent, such as `1e400`.
+**Records checked against OATS 0.8.0** can get a different verdict, because 0.8.0 leaves most numbers unbounded. The validators check the value that `JSON.parse` returns, not the JSON text, so they never see the original digits, and oatschema-py keeps every integer exact. Keep integers within the range above and neither difference can occur.
+
+- **Large integers in a list of unique values:** `JSON.parse` can round integers above 2^53, so two different ones can become equal. In a `uniqueItems` list the record then fails here, while oatschema-py accepts it. These lists are `embedding`'s sparse `indices` and the `pages` lists in `document-extraction`'s `page_width` and `page_height`.
+- **Integers too large for a JavaScript number:** `JSON.parse` turns an integer of about 1.8 × 10^308 or more, written without a fraction or exponent, into `Infinity`, or a negative one into `-Infinity`. Neither passes `type: integer` or `type: number`, so the record fails here. oatschema-py accepts it wherever the schema sets no limit: every integer field (none has a `maximum`), such as `ranking`'s `rank` and `embedding`'s `indices` and `dimensions`, and every number field with no `maximum`, such as box coordinates, durations, times, and numbers in `attributes` and `generic` data. Both reject the value where a `maximum` (or, for a negative value, a `minimum`) applies, or when it's written with a fraction or an exponent, such as `1e400`.
 
 These don't change a verdict:
 
-- An integer above 2^53 that passes may reach your code rounded: `JSON.parse("9007199254740993")` gives `9007199254740992`. oatschema-py keeps the digits. An integer for which `Number.isSafeInteger(value)` is false may not be the one in the text; if you need the exact digits, read them from the JSON text with a parser that keeps them.
+- At OATS 0.8.0, an integer above 2^53 that passes may reach your code rounded: `JSON.parse("9007199254740993")` gives `9007199254740992`. oatschema-py keeps the digits. An integer for which `Number.isSafeInteger(value)` is false may not be the one in the text; if you need the exact digits, read them from the JSON text with a parser that keeps them.
+- At any version, a number written with more digits than a double holds is rounded when it's read, such as `1.00000000000000001`. Write a value whose exact digits matter as a string, where the schema allows one.
 - Property names in messages are shortened to 100 characters. oatschema-py quotes them in full, within its 1,000-character limit.
 - When a record has several errors, the two packages may list them in a different order, so `validate` can report a different one of them.
-- Records must be JSON values. Values JSON can't hold, such as `undefined`, `NaN`, functions, class instances and cyclic objects, give no particular result.
+- Records must be JSON values. Values JSON can't hold, such as `undefined`, `NaN`, functions, class instances and cyclic objects, give no particular result, and may throw or take a long time.
 
 ### With your own Ajv
 
@@ -152,6 +155,8 @@ const check = ajv.compile(getSchema("classification"));
 - `x-license` and `x-version` are the only non-standard keywords in OATS. Registering them keeps Ajv's strict mode on for everything else.
 - The three relaxed options switch off Ajv's style checks, which reject some valid 2020-12 patterns that OATS uses, such as `required` inside an `if`.
 - Compile each schema once per Ajv instance and reuse the function. Compiling a second copy with the same `$id` throws; fetch the first with `ajv.getSchema(schema.$id)`.
+- Your own Ajv accepts unpaired surrogates, which `oatschema/validate` rejects.
+- Ajv's generated `uniqueItems` check misses a repeated `"__proto__"` string, as of Ajv 8.20.0. The validators in `oatschema/validate` correct this; with your own Ajv, the record passes.
 - Ajv's own error objects can carry property names from the record at any length. `oatschema/validate` bounds its errors; with your own Ajv, that's up to you.
 
 ## API
@@ -181,7 +186,7 @@ From `oatschema/validate`:
 
 `oatschema/validate` also re-exports `UnknownSchemaError` and `SchemaLookupError`, and the types `Validator`, `ValidateOptions` and `ValidationErrorDetails`. `oatschema/validate/<name>` exports `getValidator(version?, options?)` for that schema, `ValidationError`, `SchemaLookupError` and the same types. `oatschema/ajv` exports `addOatsKeywords(ajv)` and `addOatsFormats(ajv)`.
 
-- `version` must be exact: `"0.8.0"`, never `"0.8"` or `"latest"`.
+- `version` must be exact: `"0.9.0"`, never `"0.9"` or `"latest"`.
 - `options` is `{ checkFormats?: boolean }`. Any other key, or a `checkFormats` that isn't a boolean, throws a `TypeError`.
 - `UnknownSchemaError` and `SchemaLookupError` carry the requested `schemaName`, and `SchemaLookupError` also carries `schemaVersion`.
 
@@ -189,9 +194,10 @@ From `oatschema/validate`:
 
 **Schema versions.** Before OATS 1.0, a new release may reject records an older one accepted, or the reverse, so pass the version a record was written for.
 
-- Each `$id` includes its version (`https://oatschema.org/0.8.0/classification`), so several versions can share one Ajv instance.
+- Each `$id` includes its version (`https://oatschema.org/0.9.0/classification`), so several versions can share one Ajv instance.
 - Each schema states its own version in `x-version`.
-- This package bundles OATS 0.8.0, the first public release, and every later one. For 0.4.0 to 0.7.0, use the Python package, [oatschema-py](https://github.com/oatschema/oatschema-py).
+- From 0.9.0, `entity-extraction` offsets count Unicode code points, while JavaScript string indices count UTF-16 code units. Convert them, for example with `Array.from(text).length`, or they point at the wrong text after the first character outside the Basic Multilingual Plane.
+- This package bundles OATS 0.8.0, the first public release, and every later one: currently 0.8.0 and 0.9.0. For 0.4.0 to 0.7.0, use the Python package, [oatschema-py](https://github.com/oatschema/oatschema-py).
 
 **Package versions.** The package has its own semantic version, which never encodes a schema version; read `SCHEMA_VERSION` instead. Upgrading never removes a schema version, but it can move the default. Before 1.0, a release that changes the default is a minor bump, so npm's default `^0.x.y` range keeps your default fixed.
 

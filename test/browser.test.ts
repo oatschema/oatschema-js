@@ -7,7 +7,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { describe, test } from "node:test";
 import { fileURLToPath } from "node:url";
-import { SCHEMA_NAMES } from "oatschema";
+import { availableVersions, SCHEMA_NAMES } from "oatschema";
 
 const PROJECT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const DIST = join(PROJECT, "dist");
@@ -31,7 +31,9 @@ function walk(directory: string): string[] {
 
 function imports(file: string): string[] {
   const source = readFileSync(file, "utf8");
-  return [...source.matchAll(/(?:\bfrom|\bimport)\s*["']([^"']+)["']/g)].map((match) => match[1] ?? "");
+  return [...source.matchAll(/(?:^|;)\s*(?:import\s*|(?:import|export)\b[^"';]*\bfrom\s*)["']([^"']+)["']/gm)].map(
+    (match) => match[1] ?? "",
+  );
 }
 
 function graph(entry: string): Set<string> {
@@ -80,7 +82,7 @@ describe("the shipped modules run as plain browser ESM under script-src 'self'",
     test(`oatschema/validate/${name} loads only its own validator and no schema text`, () => {
       const files = graph(`validate/${name}.js`);
       const compiled = [...files].filter((file) => file.startsWith("compiled/"));
-      assert.ok(compiled.length > 0);
+      assert.equal(compiled.length, availableVersions().length);
       for (const file of compiled) {
         assert.ok(file.endsWith(`/${name}.js`), file);
       }
@@ -113,6 +115,11 @@ describe("the shipped modules run as plain browser ESM under script-src 'self'",
       'if (isValid({ labels: [{ label: "cat", timestamp: "2026-10-20 12:00:00Z" }] }, "classification")) throw new Error("invalid");',
       'try { validate({ labels: "x" }, "classification"); throw new Error("no error"); } catch (e) { if (e.name !== "ValidationError") throw e; }',
       'if (!getValidator().isValid({ unit: "pt", blocks: [] })) throw new Error("document-extraction");',
+      'const seed = { model: "m", response_data: "x", generation_params: { seed: 42 } };',
+      'if (!isValid(seed, "llm-output", "0.8.0")) throw new Error("0.8.0 takes a numeric seed");',
+      'if (isValid(seed, "llm-output", "0.9.0")) throw new Error("0.9.0 refuses a numeric seed");',
+      'if (isValid({ labels: [], producer: "\\ud800" }, "classification", "0.8.0")) throw new Error("surrogate");',
+      'if (isValid({ labels: [], producer: "\\ud800" }, "classification", "0.9.0")) throw new Error("surrogate");',
       'console.log("ok");',
     ].join("\n");
     const result = spawnSync(

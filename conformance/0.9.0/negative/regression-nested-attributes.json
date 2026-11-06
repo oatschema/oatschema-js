@@ -1,0 +1,15 @@
+{
+  "target": "inventory_count",
+  "producer": "SAP-Connector",
+  "attributes": {
+    "warehouse_location": "Zone A",
+    "metadata": {
+      "error": "Nested objects are forbidden in attributes"
+    }
+  },
+  "points": [
+    {
+      "value": 500
+    }
+  ]
+}

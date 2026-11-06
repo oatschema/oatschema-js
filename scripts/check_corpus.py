@@ -5,7 +5,7 @@ r"""Check the conformance corpus against oatschema-py, the reference implementat
 
 Run it with uv, which installs oatschema-py in a temporary environment:
 
-    uv run --no-project --with 'oatschema[validate]==0.8.0.1' --with 'jsonschema-rs==0.59.0' \
+    uv run --no-project --with 'oatschema[validate]==0.9.0.0' --with 'jsonschema-rs==0.60.3' \
         python scripts/check_corpus.py
 
 It checks every verdict in ``conformance/`` with format checks on and off, prints each disagreement,
@@ -45,7 +45,22 @@ def check_case(directory: Path, case: dict) -> list[str]:
     return problems
 
 
-def check_formats(data: dict) -> list[str]:
+def check_literal(case: dict, schema_version: str) -> list[str]:
+    record = json.loads(case["text"])
+    problems = []
+    for check_formats in (True, False):
+        actual = oatschema.is_valid(record, case["schema"], schema_version, check_formats=check_formats)
+        if actual != case["valid"]:
+            problems.append(f"{case['id']}: valid is {case['valid']}, oatschema-py says {actual}")
+    target = case["pointer"] + "/"
+    for error in oatschema.iter_errors(record, case["schema"], schema_version):
+        found = pointer(error) + "/"
+        if not (target.startswith(found) or found.startswith(target)):
+            problems.append(f"{case['id']}: also fails at {pointer(error)!a}")
+    return problems
+
+
+def check_formats(data: dict, schema_version: str) -> list[str]:
     problems = []
     for case in data["cases"]:
         template = data["records"][case["format"]]
@@ -55,10 +70,10 @@ def check_formats(data: dict) -> list[str]:
             node = node[part]
         node[template["path"][-1]] = case["value"]
         for check_formats, expected in ((True, case["valid"]), (False, True)):
-            actual = oatschema.is_valid(record, template["schema"], data["version"], check_formats=check_formats)
+            actual = oatschema.is_valid(record, template["schema"], schema_version, check_formats=check_formats)
             if actual != expected:
                 problems.append(
-                    f"{case['format']} {case['value']!r} with check_formats={check_formats}: "
+                    f"{schema_version} {case['format']} {case['value']!r} with check_formats={check_formats}: "
                     f"expected {expected}, oatschema-py says {actual}"
                 )
     return problems
@@ -67,14 +82,20 @@ def check_formats(data: dict) -> list[str]:
 def main() -> int:
     problems = []
     checked = 0
+    formats = json.loads((CORPUS / "formats.json").read_text(encoding="utf-8"))
     for cases_file in sorted(CORPUS.glob("*/cases.json")):
         data = json.loads(cases_file.read_text(encoding="utf-8"))
         for case in data["cases"]:
             problems.extend(check_case(cases_file.parent, case))
             checked += 1
-    formats = json.loads((CORPUS / "formats.json").read_text(encoding="utf-8"))
-    problems.extend(check_formats(formats))
-    checked += len(formats["cases"])
+        schema_version = cases_file.parent.name
+        literals_file = cases_file.parent / "literals.json"
+        if literals_file.exists():
+            for case in json.loads(literals_file.read_text(encoding="utf-8"))["cases"]:
+                problems.extend(check_literal(case, schema_version))
+                checked += 1
+        problems.extend(check_formats(formats, schema_version))
+        checked += len(formats["cases"])
     for problem in problems:
         print(problem)
     engine = f"oatschema {oatschema.__version__}, jsonschema-rs {version('jsonschema-rs')}"

@@ -10,6 +10,11 @@ const MESSAGE_LIMIT = 1000;
 const VALUE = "…";
 const ARRAY_KEYWORDS: ReadonlySet<string> = new Set(["allOf", "anyOf", "oneOf", "prefixItems"]);
 const DROPPED_KEYWORDS: ReadonlySet<string> = new Set(["if", "propertyNames"]);
+const UNPAIRED_SURROGATE = /\p{Cs}/u;
+const UNPAIRED_SURROGATES = /\p{Cs}/gu;
+const SCAN_DEPTH_LIMIT = 64;
+const SCAN_VISITS_BEFORE_TRACKING = 2 ** 24;
+const SURROGATE_REASON = "… contains an unpaired surrogate, which RFC 7493 does not allow in JSON text";
 
 /** Options for validation. */
 export interface ValidateOptions {
@@ -40,7 +45,10 @@ export interface ValidationErrorDetails {
  * `reason` shows each value from the record as `…`, quoting only property names, and is at most 1,000 characters.
  * `message` adds the schema and the location, as in `classification 0.8.0 at /labels/0/score: … is greater than the
  * maximum of 1`. Each string in `path` is at most 100 characters, and the location in `message` at most 1,000.
- * The underlying validator's error is not kept.
+ * The underlying validator's error is not kept. An unpaired surrogate in a {@link Validator}'s error's location is
+ * escaped in `message`, so that message can always be printed.
+ *
+ * `schemaPath` and `keyword` are empty for a check no schema keyword expresses: an unpaired surrogate.
  */
 export class ValidationError extends Error {
   /** Why the value was rejected, without the schema or the location. */
@@ -62,7 +70,7 @@ export class ValidationError extends Error {
     const schemaPath = Object.freeze(boundPath(details.schemaPath ?? []));
     const name = shorten(String(details.schemaName), PATH_PART_LIMIT);
     const version = shorten(String(details.schemaVersion), PATH_PART_LIMIT);
-    const location = shorten(path.join("/"), MESSAGE_LIMIT);
+    const location = shorten(escapeSurrogates(path.join("/")), MESSAGE_LIMIT);
     super(`${name} ${version} at /${location}: ${bounded}`);
     this.reason = bounded;
     this.schemaName = name as SchemaName;
@@ -85,6 +93,8 @@ Object.defineProperty(ValidationError.prototype, "name", {
  *
  * Formats (`date-time`, `uri`, …) are checked unless {@link Validator.checkFormats} is `false`.
  * Records are JSON values, such as the result of `JSON.parse`.
+ * A string or property name with an unpaired surrogate does not conform, in every schema version and whatever
+ * {@link Validator.checkFormats} says, because RFC 7493 forbids them.
  */
 export interface Validator {
   /** The schema's name. */
@@ -106,6 +116,8 @@ export interface Validator {
    *
    * Every error is found before the first is yielded. The same record gives the same errors in the same order,
    * but the order may change between releases.
+   *
+   * A record with an unpaired surrogate reports only those.
    */
   iterErrors(record: unknown): IterableIterator<ValidationError>;
 }
@@ -134,6 +146,107 @@ interface Folded {
 
 function boundPath(path: readonly unknown[]): (string | number)[] {
   return [...path].map((part) => (typeof part === "number" ? part : shorten(String(part), PATH_PART_LIMIT)));
+}
+
+function escapeSurrogates(text: string): string {
+  return text.replace(UNPAIRED_SURROGATES, (unit) => `\\u${unit.charCodeAt(0).toString(16)}`);
+}
+
+function mayHoldSurrogate(value: unknown, depth: number, budget: { visits: number }): boolean {
+  if (depth > SCAN_DEPTH_LIMIT) {
+    return false;
+  }
+  budget.visits--;
+  if (budget.visits < 0) {
+    return true;
+  }
+  if (Array.isArray(value)) {
+    for (let index = 0; index < value.length; index++) {
+      const item: unknown = value[index];
+      if (
+        typeof item === "string"
+          ? UNPAIRED_SURROGATE.test(item)
+          : typeof item === "object" && item !== null && mayHoldSurrogate(item, depth + 1, budget)
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
+  const container = value as { [key: string]: unknown };
+  const keys = Object.keys(container);
+  for (let index = 0; index < keys.length; index++) {
+    const key = keys[index] as string;
+    const item = container[key];
+    if (
+      UNPAIRED_SURROGATE.test(key) ||
+      (typeof item === "string"
+        ? UNPAIRED_SURROGATE.test(item)
+        : typeof item === "object" && item !== null && mayHoldSurrogate(item, depth + 1, budget))
+    ) {
+      return true;
+    }
+  }
+  return false;
+}
+
+interface ScanNode {
+  readonly value: object;
+  readonly depth: number;
+  readonly parent?: ScanNode;
+  readonly key?: string | number;
+}
+
+interface SurrogateHit {
+  readonly node?: ScanNode;
+  readonly key?: string | number;
+}
+
+function hitPath({ node, key }: SurrogateHit): (string | number)[] {
+  const path: (string | number)[] = key === undefined ? [] : [key];
+  for (let current = node; current?.key !== undefined; current = current.parent) {
+    path.push(current.key);
+  }
+  return path.reverse();
+}
+
+function surrogateHits(record: unknown, firstOnly: boolean): SurrogateHit[] {
+  if (typeof record === "string") {
+    return UNPAIRED_SURROGATE.test(record) ? [{}] : [];
+  }
+  if (
+    typeof record !== "object" ||
+    record === null ||
+    !mayHoldSurrogate(record, 0, { visits: SCAN_VISITS_BEFORE_TRACKING })
+  ) {
+    return [];
+  }
+  const hits: SurrogateHit[] = [];
+  const seen = new Set<object>([record]);
+  const stack: ScanNode[] = [{ value: record, depth: 0 }];
+  for (let node = stack.pop(); node !== undefined; node = stack.pop()) {
+    const container = node.value as { [key: string | number]: unknown };
+    const keys: readonly (string | number)[] = Array.isArray(container)
+      ? Array.from(container.keys())
+      : Object.keys(container);
+    for (const key of keys) {
+      const value = container[key];
+      if (
+        (typeof key === "string" && UNPAIRED_SURROGATE.test(key)) ||
+        (typeof value === "string" && UNPAIRED_SURROGATE.test(value))
+      ) {
+        hits.push({ node, key });
+        if (firstOnly) {
+          return hits;
+        }
+      }
+      if (typeof value === "object" && value !== null && node.depth < SCAN_DEPTH_LIMIT && !seen.has(value)) {
+        seen.add(value);
+        stack.push({ value, depth: node.depth + 1, parent: node, key });
+      }
+    }
+  }
+  return hits;
 }
 
 function lastKeyword(schemaPath: readonly (string | number)[]): string {
@@ -339,10 +452,17 @@ class CompiledSchemaValidator implements Validator {
   }
 
   isValid(record: unknown): boolean {
+    if (surrogateHits(record, true).length > 0) {
+      return false;
+    }
     return withFormats(this.checkFormats, () => this.#compiled(record));
   }
 
   validate(record: unknown): void {
+    const [surrogate] = surrogateHits(record, true);
+    if (surrogate !== undefined) {
+      throw this.#surrogateError(hitPath(surrogate));
+    }
     const errors = this.#run(record);
     const first = errors[0];
     if (first !== undefined) {
@@ -351,9 +471,24 @@ class CompiledSchemaValidator implements Validator {
   }
 
   *iterErrors(record: unknown): IterableIterator<ValidationError> {
+    const surrogates = surrogateHits(record, false);
+    if (surrogates.length > 0) {
+      for (const hit of surrogates) {
+        yield this.#surrogateError(hitPath(hit));
+      }
+      return;
+    }
     for (const error of this.#run(record)) {
       yield this.#convert(error, record);
     }
+  }
+
+  #surrogateError(path: readonly (string | number)[]): ValidationError {
+    return new ValidationError(SURROGATE_REASON, {
+      schemaName: this.schemaName,
+      schemaVersion: this.schemaVersion,
+      path,
+    });
   }
 
   #run(record: unknown): Folded[] {

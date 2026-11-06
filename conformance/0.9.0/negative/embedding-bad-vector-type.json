@@ -1,0 +1,4 @@
+{
+  "model": "text-embedding-3-small",
+  "vector": "[0.012, 0.453, 0.991, -0.234]"
+}

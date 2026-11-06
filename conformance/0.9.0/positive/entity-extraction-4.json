@@ -1,0 +1,57 @@
+{
+  "producer": "contract-reviewer 1.4",
+  "vocabulary": ["FEE_CAP", "SCHEDULE", "NOTICE"],
+  "unit": "pt",
+  "entities": [
+    {
+      "id": "e1",
+      "label": "FEE_CAP",
+      "text": "fees payable under",
+      "location": [
+        {
+          "type": "block_range",
+          "start_block_id": "p3-l12",
+          "start": 6,
+          "end_block_id": "p3-l13",
+          "end": 5
+        },
+        {
+          "type": "block",
+          "block_type": "box",
+          "page_number": 3,
+          "box": {
+            "x": 96,
+            "y": 210,
+            "width": 402,
+            "height": 28
+          }
+        }
+      ]
+    },
+    {
+      "id": "e2",
+      "label": "SCHEDULE",
+      "location": [
+        {
+          "type": "block_range",
+          "start_block_id": "p7-l1",
+          "end_block_id": "p9-l40"
+        }
+      ]
+    },
+    {
+      "id": "e3",
+      "label": "NOTICE",
+      "text": "thirty days' notice",
+      "location": [
+        {
+          "type": "block_range",
+          "start_block_id": "p5-l3",
+          "start": 8,
+          "end_block_id": "p5-l3",
+          "end": 27
+        }
+      ]
+    }
+  ]
+}

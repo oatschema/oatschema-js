@@ -1,0 +1,10 @@
+{
+  "target": "risk_score",
+  "points": [
+    {
+      "value": 0.8,
+      "statistic": "quantile",
+      "quantile_level": 95
+    }
+  ]
+}

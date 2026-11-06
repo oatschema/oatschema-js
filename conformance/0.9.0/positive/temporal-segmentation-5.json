@@ -1,0 +1,41 @@
+{
+  "producer": "PySceneDetect",
+  "vocabulary": [
+    "scene"
+  ],
+  "segments": [
+    {
+      "id": "scene-1",
+      "label": "scene",
+      "start_time": 0.0,
+      "end_time": 3.754,
+      "attributes": {
+        "start_frame": 1,
+        "end_frame": 90
+      }
+    },
+    {
+      "id": "scene-2",
+      "label": "scene",
+      "start_time": 3.754,
+      "end_time": 8.925,
+      "attributes": {
+        "start_frame": 91,
+        "end_frame": 214
+      }
+    },
+    {
+      "id": "scene-3",
+      "label": "scene",
+      "start_time": 8.925,
+      "end_time": 16.767,
+      "attributes": {
+        "start_frame": 215,
+        "end_frame": 402
+      }
+    }
+  ],
+  "attributes": {
+    "source_format": "PySceneDetect scene list CSV"
+  }
+}

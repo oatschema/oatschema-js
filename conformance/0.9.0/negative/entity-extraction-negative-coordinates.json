@@ -1,0 +1,16 @@
+{
+  "unit": "px",
+  "entities": [
+    {
+      "label": "LOGO",
+      "location": [
+        {
+          "type": "block",
+          "block_type": "box",
+          "page_number": 1,
+          "box": { "x": -10, "y": 20, "width": 50, "height": 50 }
+        }
+      ]
+    }
+  ]
+}

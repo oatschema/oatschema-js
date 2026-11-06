@@ -1,0 +1,37 @@
+{
+  "target": "relevance",
+  "producer": "bge-reranker-v2-m3",
+  "query": "waterproof trail running shoes",
+  "collection": "products",
+  "score_explanation": "Sigmoid of the reranker logit.",
+  "total_candidates": 100,
+  "results": [
+    {
+      "rank": 1,
+      "id": "sku-48213",
+      "title": "Ridgeline GTX Trail Runner",
+      "score": 0.982,
+      "attributes": {
+        "logit": 4.0
+      }
+    },
+    {
+      "rank": 2,
+      "id": "sku-51007",
+      "title": "Fellrunner Waterproof",
+      "score": 0.924,
+      "attributes": {
+        "logit": 2.5
+      }
+    },
+    {
+      "rank": 2,
+      "id": "sku-50110",
+      "title": "Stormpath Trail Shoe",
+      "score": 0.924,
+      "attributes": {
+        "logit": 2.5
+      }
+    }
+  ]
+}
