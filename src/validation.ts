@@ -119,10 +119,11 @@ export interface Validator {
   /**
    * Return an iterator over every error in `record`, as {@link ValidationError}s.
    *
-   * Every error is found before the first is yielded. The same record gives the same errors in the same order,
-   * but the order may change between releases.
+   * Every error is found before the first is yielded, except unpaired surrogates, which are found as they are
+   * yielded, so stopping early saves the rest of the search. The same record gives the same errors in the same
+   * order, but the order may change between releases.
    *
-   * A record with an unpaired surrogate reports only those.
+   * A record with an unpaired surrogate reports only those. Don't change the record while iterating.
    */
   iterErrors(record: unknown): IterableIterator<ValidationError>;
 }
@@ -159,6 +160,7 @@ function escapeSurrogates(text: string): string {
 
 class Revisits {
   #visits = 0;
+  #work = 0;
   #proven = false;
   #recent: (object | undefined)[] = [];
   #next = 0;
@@ -171,8 +173,12 @@ class Revisits {
     this.#after = after;
   }
 
-  get visits(): number {
-    return this.#visits;
+  get work(): number {
+    return this.#work;
+  }
+
+  count(items: number): void {
+    this.#work += items + 1;
   }
 
   admit(value: object, depth: number): boolean {
@@ -181,7 +187,7 @@ class Revisits {
   }
 
   leave(value: object, depth: number, from: number): void {
-    if (this.#visits > this.#after && this.#visits - from >= SCAN_LARGE_SUBTREE && !this.#proven) {
+    if (this.#visits > this.#after && this.#work - from >= SCAN_LARGE_SUBTREE && !this.#proven) {
       const shard = this.#depths[0] as Map<object, number>;
       const evicted = this.#large[this.#nextLarge];
       if (evicted !== undefined) {
@@ -243,7 +249,7 @@ function holdsSurrogate(value: object, depth: number, revisits: Revisits): boole
   if (depth > SCAN_DEPTH_LIMIT || !revisits.admit(value, depth)) {
     return false;
   }
-  const from = revisits.visits;
+  const from = revisits.work;
   if (holdsSurrogateWithin(value, depth, revisits)) {
     return true;
   }
@@ -253,6 +259,7 @@ function holdsSurrogate(value: object, depth: number, revisits: Revisits): boole
 
 function holdsSurrogateWithin(value: object, depth: number, revisits: Revisits): boolean {
   if (Array.isArray(value)) {
+    revisits.count(value.length);
     for (let index = 0; index < value.length; index++) {
       const item: unknown = value[index];
       if (
@@ -267,6 +274,7 @@ function holdsSurrogateWithin(value: object, depth: number, revisits: Revisits):
   }
   const container = value as { [key: string]: unknown };
   const keys = Object.keys(container);
+  revisits.count(keys.length);
   for (let index = 0; index < keys.length; index++) {
     const key = keys[index] as string;
     const item = container[key];
@@ -282,98 +290,105 @@ function holdsSurrogateWithin(value: object, depth: number, revisits: Revisits):
   return false;
 }
 
-interface PathStep {
-  readonly parent: PathStep | undefined;
-  readonly key: string | number;
+interface ScanFrame {
+  value: object | undefined;
+  keys: readonly string[] | undefined;
+  index: number;
+  checkingKeys: boolean;
+  from: number;
 }
 
-function stepsToPath(step: PathStep | undefined): (string | number)[] {
+function* surrogatePaths(record: unknown): Generator<(string | number)[], void, undefined> {
+  if (typeof record === "string") {
+    if (UNPAIRED_SURROGATE.test(record)) {
+      yield [];
+    }
+    return;
+  }
+  if (typeof record !== "object" || record === null) {
+    return;
+  }
+  const revisits = new Revisits(0);
+  const frames: ScanFrame[] = [];
   const path: (string | number)[] = [];
-  for (let current = step; current !== undefined; current = current.parent) {
-    path.push(current.key);
-  }
-  return path.reverse();
-}
-
-class SurrogateFinder {
-  readonly hits: (PathStep | undefined)[] = [];
-  readonly #firstOnly: boolean;
-  readonly #keys: (string | number)[] = [];
-  readonly #steps: PathStep[] = [];
-  readonly #revisits = new Revisits(0);
-
-  constructor(record: object, firstOnly: boolean) {
-    this.#firstOnly = firstOnly;
-    this.#visit(record, 0);
-  }
-
-  #hit(key: string | number): boolean {
-    const keys = this.#keys;
-    const steps = this.#steps;
-    for (let index = steps.length; index < keys.length; index++) {
-      steps.push({ parent: steps[index - 1], key: keys[index] as string | number });
-    }
-    this.hits.push({ parent: steps.at(-1), key });
-    return this.#firstOnly;
-  }
-
-  #child(key: string | number, item: object, depth: number): boolean {
-    const keys = this.#keys;
-    keys.push(key);
-    const stop = this.#visit(item, depth + 1);
-    keys.pop();
-    if (this.#steps.length > keys.length) {
-      this.#steps.length = keys.length;
-    }
-    return stop;
-  }
-
-  #visit(value: object, depth: number): boolean {
-    if (depth > SCAN_DEPTH_LIMIT || !this.#revisits.admit(value, depth)) {
+  const enter = (value: object, depth: number): boolean => {
+    if (depth > SCAN_DEPTH_LIMIT || !revisits.admit(value, depth)) {
       return false;
     }
-    const from = this.#revisits.visits;
-    if (this.#within(value, depth)) {
-      return true;
+    const keys = Array.isArray(value) ? undefined : Object.keys(value);
+    const frame = frames[depth];
+    const from = revisits.work;
+    revisits.count(keys === undefined ? (value as unknown[]).length : keys.length);
+    if (frame === undefined) {
+      frames[depth] = {
+        value,
+        keys,
+        index: keys === undefined ? 0 : keys.length - 1,
+        checkingKeys: keys !== undefined,
+        from,
+      };
+    } else {
+      frame.value = value;
+      frame.keys = keys;
+      frame.index = keys === undefined ? 0 : keys.length - 1;
+      frame.checkingKeys = keys !== undefined;
+      frame.from = from;
     }
-    this.#revisits.leave(value, depth, from);
-    return false;
+    return true;
+  };
+  if (!enter(record, 0)) {
+    return;
   }
-
-  #within(value: object, depth: number): boolean {
-    if (Array.isArray(value)) {
-      for (let index = 0; index < value.length; index++) {
-        const item: unknown = value[index];
-        if (
-          typeof item === "string"
-            ? UNPAIRED_SURROGATE.test(item) && this.#hit(index)
-            : typeof item === "object" && item !== null && this.#child(index, item, depth)
-        ) {
-          return true;
+  let depth = 0;
+  walk: while (depth >= 0) {
+    const frame = frames[depth] as ScanFrame;
+    const value = frame.value as { [key: string | number]: unknown };
+    const keys = frame.keys;
+    if (keys !== undefined && frame.checkingKeys) {
+      while (frame.index >= 0) {
+        const key = keys[frame.index--] as string;
+        if (UNPAIRED_SURROGATE.test(key)) {
+          yield [...path, key];
         }
       }
-      return false;
+      frame.checkingKeys = false;
+      frame.index = 0;
     }
-    const container = value as { [key: string]: unknown };
-    const keys = Object.keys(container);
-    for (let index = keys.length - 1; index >= 0; index--) {
-      const key = keys[index] as string;
-      if (UNPAIRED_SURROGATE.test(key) && this.#hit(key)) {
-        return true;
+    if (keys === undefined) {
+      const items = value as unknown as unknown[];
+      while (frame.index < items.length) {
+        const index = frame.index++;
+        const item = items[index];
+        if (typeof item === "string") {
+          if (UNPAIRED_SURROGATE.test(item)) {
+            yield [...path, index];
+          }
+        } else if (typeof item === "object" && item !== null && enter(item, depth + 1)) {
+          path.push(index);
+          depth++;
+          continue walk;
+        }
+      }
+    } else {
+      while (frame.index < keys.length) {
+        const key = keys[frame.index++] as string;
+        const item = value[key];
+        if (typeof item === "string") {
+          if (UNPAIRED_SURROGATE.test(item)) {
+            yield [...path, key];
+          }
+        } else if (typeof item === "object" && item !== null && enter(item, depth + 1)) {
+          path.push(key);
+          depth++;
+          continue walk;
+        }
       }
     }
-    for (let index = 0; index < keys.length; index++) {
-      const key = keys[index] as string;
-      const item = container[key];
-      if (
-        typeof item === "string"
-          ? UNPAIRED_SURROGATE.test(item) && this.#hit(key)
-          : typeof item === "object" && item !== null && this.#child(key, item, depth)
-      ) {
-        return true;
-      }
-    }
-    return false;
+    revisits.leave(value, depth, frame.from);
+    frame.value = undefined;
+    frame.keys = undefined;
+    path.pop();
+    depth--;
   }
 }
 
@@ -386,16 +401,6 @@ function hasSurrogate(record: unknown): boolean {
     record !== null &&
     holdsSurrogate(record, 0, new Revisits(SCAN_VISITS_BEFORE_TRACKING))
   );
-}
-
-function surrogateHits(record: unknown, firstOnly: boolean): (PathStep | undefined)[] {
-  if (!hasSurrogate(record)) {
-    return [];
-  }
-  if (typeof record !== "object" || record === null) {
-    return [undefined];
-  }
-  return new SurrogateFinder(record, firstOnly).hits;
 }
 
 function lastKeyword(schemaPath: readonly (string | number)[]): string {
@@ -608,9 +613,11 @@ class CompiledSchemaValidator implements Validator {
   }
 
   validate(record: unknown): void {
-    const surrogates = surrogateHits(record, true);
-    if (surrogates.length > 0) {
-      throw this.#surrogateError(stepsToPath(surrogates[0]));
+    if (hasSurrogate(record)) {
+      const first = surrogatePaths(record).next();
+      if (!first.done) {
+        throw this.#surrogateError(first.value);
+      }
     }
     const errors = this.#run(record);
     const first = errors[0];
@@ -620,12 +627,15 @@ class CompiledSchemaValidator implements Validator {
   }
 
   *iterErrors(record: unknown): IterableIterator<ValidationError> {
-    const surrogates = surrogateHits(record, false);
-    if (surrogates.length > 0) {
-      for (const hit of surrogates) {
-        yield this.#surrogateError(stepsToPath(hit));
+    if (hasSurrogate(record)) {
+      let found = false;
+      for (const path of surrogatePaths(record)) {
+        found = true;
+        yield this.#surrogateError(path);
       }
-      return;
+      if (found) {
+        return;
+      }
     }
     for (const error of this.#run(record)) {
       yield this.#convert(error, record);

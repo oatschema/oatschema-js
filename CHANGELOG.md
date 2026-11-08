@@ -7,14 +7,15 @@ This package uses its own semantic version. `SCHEMA_VERSION` gives the default O
 Fixes the unpaired-surrogate check added in 0.2.0. No verdict changes: every record that 0.2.0 gave a verdict for gets the same one.
 
 - Fixed: a record with more than 2^24 (16,777,216) arrays and objects threw `RangeError: Set maximum size exceeded` from `isValid`, `validate` and `iterErrors`, after up to two minutes, even when it was valid. It now gets its verdict.
-- Fixed: an unpaired surrogate in a large record sent even `isValid` through a slow pass that stored something for every array and object, enough to run the process out of memory: a 30 MB record needed about 2 GB. Now `isValid` needs no memory beyond the record. `validate` and `iterErrors` need only the path to each surrogate, the errors they return, and a fixed cache of under 10 MB.
+- Fixed: an unpaired surrogate in a large record sent even `isValid` through a slow pass that stored something for every array and object, enough to run the process out of memory: a 30 MB record needed about 2 GB. Now `isValid`, `validate` and `iterErrors` need only the errors they return and a fixed cache of under 10 MB.
+- `iterErrors` now finds unpaired surrogates as it yields them, so stopping after the first one costs only that one: for 10 million of them, it needs no memory beyond the record, where 0.2.0 needed about 1 GB and 19 s. Other errors are still all found before the first is yielded. Don't change a record while iterating over its errors.
 - Surrogate errors now come in the order oatschema-py 0.9.0.0 gives them, so `validate` reports the same one. Within each object, property names holding one come first, last name first, then the values, in order. A property name and its value that both hold one now give two errors, as in oatschema-py. JavaScript lists property names that are array indices, such as `"1"`, before the others, so the order can still differ there.
 - Corrected costs. 0.2.0 quoted 0.1 to 0.25 s for a 64 MB record, which holds only for some shapes. The scan's added cost, measured on an AMD Ryzen 5 3600 with Node 23.6.1:
   - a small record: under 1 µs; a 1,536-float embedding: about 7 µs;
-  - 64 MB of short strings: 0.1 to 0.2 s; of `[0, 0]` pairs: 0.25 to 0.4 s; of `{ label, score }` objects: 0.3 to 0.5 s;
-  - one object with 4.8 million properties (94 MB): 4.5 to 6.5 s, nearly all of it V8 listing the property names;
-  - with an unpaired surrogate, `isValid` costs the same or less. `validate` and `iterErrors` take about twice as long, because a second pass finds where it is.
-  - beyond 2^24 arrays and objects, each one costs more, because of a check that keeps an object used in several places from multiplying the work: 2^25 empty arrays take 0.8 s, or 2 to 2.5 s to locate a surrogate.
+  - 64 MB of short strings: 0.1 to 0.25 s; of `[0, 0]` pairs: 0.25 to 0.4 s; of `{ label, score }` objects: 0.3 to 0.5 s;
+  - one object with 4.8 million properties (94 MB): 4.5 to 7 s, nearly all of it V8 listing the property names, and 9 to 18 s to locate a surrogate in it;
+  - with an unpaired surrogate, `isValid` costs the same or less. `validate` and `iterErrors` take two to four times as long, because a second pass finds where it is.
+  - beyond 2^24 arrays and objects, each one costs more, because of a check for objects used in several places, which usually stops them multiplying the work: 2^25 empty arrays take 0.8 s, or 2 to 2.5 s to locate a surrogate.
 
 ## 0.2.0 (2026-11-06)
 

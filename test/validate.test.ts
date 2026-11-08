@@ -654,6 +654,24 @@ describe("records with more than 2^24 arrays and objects", () => {
     assert.equal(run("surrogate"), "[false,[10000000],1]");
   });
 
+  test("iterErrors finds surrogates as it yields them, so stopping early is cheap", { timeout: 300_000 }, () => {
+    const script = `
+      import { getValidator } from "oatschema/validate";
+      const record = Array.from({ length: 10_000_000 }, () => "\\ud800");
+      const validator = getValidator("classification");
+      const iterator = validator.iterErrors(record);
+      const result = [iterator.next().value.path, iterator.next().value.path];
+      try { validator.validate(record); } catch (error) { result.push(error.path); }
+      console.log(JSON.stringify(result));
+    `;
+    const child = spawnSync(process.execPath, ["--max-old-space-size=300", "--input-type=module", "-e", script], {
+      cwd: fileURLToPath(new URL("..", import.meta.url)),
+      encoding: "utf8",
+    });
+    assert.equal(child.status, 0, child.stderr.slice(-2000));
+    assert.equal(child.stdout.trim(), "[[0],[1],[0]]");
+  });
+
   test("shared parts don't multiply the work or the errors", { timeout: 120_000 }, () => {
     let shared: unknown = "\ud800";
     for (let level = 0; level < 60; level++) {
