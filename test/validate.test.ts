@@ -2,7 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import { describe, test } from "node:test";
+import { fileURLToPath } from "node:url";
 import * as schemas from "oatschema";
 import { isSchemaVersion, SCHEMA_NAMES, SCHEMA_VERSION, type SchemaName, type SchemaVersion } from "oatschema";
 import * as validation from "oatschema/validate";
@@ -470,17 +472,54 @@ describe("unpaired surrogates", () => {
     });
   }
 
-  test("iterErrors reports every surrogate and nothing else", () => {
+  test("iterErrors reports every surrogate and nothing else, in oatschema-py's order", () => {
     const record = {
       labels: "wrong",
       producer: "\ud800",
       vocabulary: ["a", "\udc00"],
       attributes: { "\ud801": "\ud802" },
     };
-    const paths = [...iterErrors(record, "classification")].map((error) => error.path);
-    assert.equal(paths.length, 3);
-    for (const expected of [["producer"], ["vocabulary", 1], ["attributes", "\ud801"]]) {
-      assert.ok(paths.some((path) => JSON.stringify(path) === JSON.stringify(expected)));
+    assert.deepEqual(
+      [...iterErrors(record, "classification")].map((error) => error.path),
+      [["producer"], ["vocabulary", 1], ["attributes", "\ud801"], ["attributes", "\ud801"]],
+    );
+  });
+
+  test("surrogates come in oatschema-py's order, so validate reports the same one", () => {
+    const cases: [unknown, (string | number)[][]][] = [
+      [
+        { labels: [], attributes: { x: "\ud800" }, vocabulary: ["\udc00"], producer: "\udfff" },
+        [["attributes", "x"], ["vocabulary", 0], ["producer"]],
+      ],
+      [
+        { labels: [], attributes: { "a\ud800": "\udc00", b: "x", "c\ud800": "y" }, producer: "\ud800" },
+        [["attributes", "c\ud800"], ["attributes", "a\ud800"], ["attributes", "a\ud800"], ["producer"]],
+      ],
+      [
+        {
+          labels: [{ label: "\ud800", x: { "\udc00": ["\ud800", { "k\ud800": 1 }] } }],
+          "z\udfff": "\ud800",
+          producer: "\ud800",
+        },
+        [
+          ["z\udfff"],
+          ["labels", 0, "label"],
+          ["labels", 0, "x", "\udc00"],
+          ["labels", 0, "x", "\udc00", 0],
+          ["labels", 0, "x", "\udc00", 1, "k\ud800"],
+          ["z\udfff"],
+          ["producer"],
+        ],
+      ],
+    ];
+    for (const [record, paths] of cases) {
+      assert.deepEqual(
+        [...iterErrors(record, "classification")].map((error) => error.path),
+        paths,
+      );
+      const error = caught(() => validate(record, "classification"));
+      assert.ok(error instanceof ValidationError);
+      assert.deepEqual(error.path, paths[0]);
     }
   });
 
@@ -541,6 +580,107 @@ describe("unpaired surrogates", () => {
     assert.equal(isValid({ labels: [], x: shared }, "classification"), false);
     const clean = { labels: [], producer: "ok", attributes: { a: "b" } };
     assert.equal(isValid(clean, "classification"), true);
+  });
+});
+
+describe("records with more than 2^24 arrays and objects", () => {
+  const COUNT = 2 ** 24 + 100;
+  const REASON = "… contains an unpaired surrogate, which RFC 7493 does not allow in JSON text";
+
+  test("get a verdict, with or without a surrogate, wherever it is", { timeout: 300_000 }, () => {
+    const clean = Array.from({ length: COUNT }, () => []);
+    assert.equal(isValid(clean, "classification"), false);
+    assert.equal((caught(() => validate(clean, "classification")) as ValidationError).keyword, "type");
+    assert.deepEqual(
+      [...iterErrors(clean, "classification")].map((error) => error.keyword),
+      ["type"],
+    );
+    const last = Array.from({ length: COUNT + 1 }, (_, index) => (index === COUNT ? "\ud800" : []));
+    assert.equal(isValid(last, "classification"), false);
+    assert.deepEqual((caught(() => validate(last, "classification")) as ValidationError).path, [COUNT]);
+    assert.deepEqual(
+      [...iterErrors(last, "classification")].map((error) => [error.path, error.reason]),
+      [[[COUNT], REASON]],
+    );
+    const first = { labels: [], producer: "\ud800", x: clean };
+    assert.equal(isValid(first, "classification"), false);
+    assert.deepEqual((caught(() => validate(first, "classification")) as ValidationError).path, ["producer"]);
+    assert.deepEqual(
+      [...iterErrors(first, "classification")].map((error) => error.path),
+      [["producer"]],
+    );
+  });
+
+  test("a valid one stays valid", { timeout: 300_000 }, () => {
+    const ring = (): number[][] => Array.from({ length: 8400 }, () => [0, 0]);
+    const record = {
+      type: "Feature",
+      properties: {} as { [key: string]: string },
+      geometry: { type: "MultiPolygon", coordinates: Array.from({ length: 1000 }, () => [ring(), ring()]) },
+    };
+    assert.equal(isValid(record, "geolocation"), true);
+    validate(record, "geolocation");
+    assert.deepEqual([...iterErrors(record, "geolocation")], []);
+    record.properties.name = "\ud800";
+    assert.equal(isValid(record, "geolocation"), false);
+    assert.deepEqual(
+      [...iterErrors(record, "geolocation")].map((error) => error.path),
+      [["properties", "name"]],
+    );
+  });
+
+  test("a surrogate needs no more heap than the clean record", { timeout: 300_000 }, () => {
+    const script = `
+      import { getValidator } from "oatschema/validate";
+      const count = 10_000_000;
+      const record = Array.from({ length: count + 1 }, (_, index) =>
+        index === count && process.argv[1] === "surrogate" ? "\\ud800" : []);
+      const validator = getValidator("classification");
+      const result = [validator.isValid(record)];
+      try { validator.validate(record); } catch (error) { result.push(error.path); }
+      result.push([...validator.iterErrors(record)].length);
+      console.log(JSON.stringify(result));
+    `;
+    const run = (kind: string): string => {
+      const child = spawnSync(
+        process.execPath,
+        ["--max-old-space-size=450", "--input-type=module", "-e", script, kind],
+        { cwd: fileURLToPath(new URL("..", import.meta.url)), encoding: "utf8" },
+      );
+      assert.equal(child.status, 0, child.stderr.slice(-2000));
+      return child.stdout.trim();
+    };
+    assert.equal(run("clean"), "[false,[],1]");
+    assert.equal(run("surrogate"), "[false,[10000000],1]");
+  });
+
+  test("shared parts don't multiply the work or the errors", { timeout: 120_000 }, () => {
+    let shared: unknown = "\ud800";
+    for (let level = 0; level < 60; level++) {
+      shared = [shared, shared];
+    }
+    const record = { labels: [], x: shared };
+    assert.equal(isValid(record, "classification"), false);
+    assert.equal((caught(() => validate(record, "classification")) as ValidationError).keyword, "");
+    const errors = [...iterErrors(record, "classification")];
+    assert.ok(errors.length > 0 && errors.length < 1000, String(errors.length));
+    let large: unknown = Array.from({ length: 2 ** 23 }, () => []);
+    for (let level = 0; level < 12; level++) {
+      large = [large, large];
+    }
+    const started = performance.now();
+    assert.equal(isValid({ labels: [], x: large }, "classification"), false);
+    assert.equal([...iterErrors({ labels: [], x: large }, "classification")].length, 1);
+    assert.ok(performance.now() - started < 20_000);
+    let wide: unknown = "a";
+    for (let level = 0; level < 60; level++) {
+      wide = { a: wide, b: wide, c: [wide] };
+    }
+    assert.equal(isValid({ labels: [], x: wide }, "classification"), false);
+    assert.deepEqual(
+      [...iterErrors({ labels: [], x: wide }, "classification")].map((error) => error.keyword),
+      ["additionalProperties"],
+    );
   });
 });
 
